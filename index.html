@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rfast Mail — Central de Disparo | R. Feitosa Group</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1A1A2E; --navy2:#2A2E4A; --navy3:#363B5C;
+  --gold:#C9A84C; --gold-d:#A8842F; --gold-l:#F4ECD6;
+  --green:#1E7A46; --green-l:#E4F1E9;
+  --amber:#B8860B; --amber-l:#FBF2D4;
+  --red:#C0392B; --red-l:#F8E4E1;
+  --ink:#111111; --slate:#6B7280; --line:#E4E6EC; --bg:#F4F5F8; --card:#FFFFFF;
+  --radius-xs:4px; --radius-sm:6px; --radius-md:10px; --radius-lg:14px; --radius-pill:999px;
+  --shadow-sm:0 1px 2px rgba(16,20,40,.06);
+  --shadow-md:0 4px 14px rgba(16,20,40,.10);
+  --shadow-lg:0 12px 34px rgba(16,20,40,.22);
+  --text-3xs:9px; --text-xxs:10.5px; --text-xs:11.5px; --text-sm:12.5px;
+  --text-base:13.5px; --text-body:14px; --text-lg:16px; --text-icon:17px; --text-serif:19px; --text-xl:20px; --text-kpi:22px; --text-2xl:23px;
+  --sp-xs:4px; --sp-sm:8px; --sp-md:12px; --sp-lg:16px; --sp-xl:24px; --sp-2xl:32px;
+  --transition:.18s ease; --transition-slow:.35s ease;
+  --focus:0 0 0 3px rgba(201,168,76,.32);
+  --ink-2:#33384a; --surface-2:#EDEEF2; --row-alt:#FAFBFC; --chip:#EEF0F4;
+  --btn-fg:#E8E9F0; --btn-line:#454A6B; --btn-hover:#3A3F60; --gold-hover:#D9B95E;
+  --tb-note:#9498AD; --red-ink:#7A2318;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:var(--text-body);line-height:1.45}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.01em}
+.mono{font-family:'JetBrains Mono',monospace}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:none;box-shadow:var(--focus);border-radius:var(--radius-sm)}
+
+.hdr{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+.hdr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--gold) 0%,var(--gold-d) 60%,transparent 100%)}
+.hdr-in{max-width:1360px;margin:0 auto;padding:18px 26px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.hdr-mark{width:52px;height:52px;border-radius:var(--radius-md);background:linear-gradient(135deg,var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--navy);font-size:var(--text-serif);box-shadow:0 0 0 1px var(--gold)}
+.hdr-txt{flex:1;min-width:240px}
+.hdr-eyebrow{font-family:'Instrument Serif',serif;font-style:italic;font-size:var(--text-lg);color:var(--gold);line-height:1}
+.hdr-title{font-size:var(--text-2xl);font-weight:900;margin-top:2px}
+.hdr-meta{font-size:var(--text-xs);color:#B9BCCB;margin-top:5px;display:flex;gap:16px;flex-wrap:wrap}
+.statuschip{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:var(--radius-pill);font-weight:800;font-size:var(--text-xs)}
+.statuschip .dot{width:9px;height:9px;border-radius:50%}
+.st-VERDE{background:var(--green-l);color:var(--green)} .st-VERDE .dot{background:var(--green)}
+.st-AMARELO{background:var(--amber-l);color:var(--amber)} .st-AMARELO .dot{background:var(--amber)}
+.st-VERMELHO{background:var(--red-l);color:var(--red)} .st-VERMELHO .dot{background:var(--red)}
+
+.toolbar{background:var(--navy2);padding:9px 26px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:flex-end;position:sticky;top:0;z-index:40}
+.tb-btn{color:var(--btn-fg);font-size:var(--text-xs);font-weight:600;padding:7px 13px;border-radius:var(--radius-sm);border:1px solid var(--btn-line);display:inline-flex;align-items:center;gap:6px;transition:var(--transition)}
+.tb-btn:hover{background:var(--btn-hover);border-color:var(--gold)}
+.tb-btn.primary{background:var(--gold);color:var(--navy);border-color:var(--gold);font-weight:800}
+.tb-btn.primary:hover{background:var(--gold-hover)}
+.tb-note{color:var(--tb-note);font-size:var(--text-xxs);margin-right:auto}
+
+.tabs{max-width:1360px;margin:0 auto;padding:0 26px;display:flex;gap:2px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.tab{padding:13px 15px;font-size:var(--text-sm);font-weight:700;color:var(--slate);border-bottom:2.5px solid transparent}
+.tab:hover{color:var(--navy)}
+.tab.active{color:var(--navy);border-bottom-color:var(--gold)}
+.tab .cnt{font-family:'JetBrains Mono',monospace;font-size:var(--text-xxs);color:#fff;background:var(--navy3);border-radius:var(--radius-pill);padding:1px 6px;margin-left:6px}
+.wrap{max-width:1360px;margin:0 auto;padding:22px 26px 60px}
+.view{display:none}
+.view.active{display:block}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px 15px;position:relative;overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
+.kpi.accent::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold)}
+.kpi .lbl{font-family:'JetBrains Mono',monospace;font-size:var(--text-xxs);font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);line-height:1.3;min-height:26px;display:flex;align-items:flex-start}
+.kpi .val{font-family:'JetBrains Mono',monospace;font-size:var(--text-kpi);font-weight:700;margin-top:4px;line-height:1.1;white-space:nowrap}
+.kpi .sub{font-size:var(--text-xs);color:var(--slate);margin-top:5px;line-height:1.35}
+.v-gold{color:var(--gold-d)} .v-green{color:var(--green)} .v-amber{color:var(--amber)} .v-red{color:var(--red)} .v-navy{color:var(--navy)}
+.section-h{display:flex;align-items:baseline;gap:12px;margin:26px 0 12px}
+.section-h .n{font-family:'Instrument Serif',serif;font-style:italic;font-size:var(--text-serif);color:var(--gold-d)}
+.section-h h2{font-size:var(--text-base);font-weight:800;color:var(--navy)}
+.section-h .rule{flex:1;height:1px;background:var(--line)}
+.note{font-size:var(--text-sm);color:var(--ink-2);line-height:1.5;background:#fff;border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:14px}
+.note b{color:var(--navy)}
+.note.warn{border-left-color:var(--red);background:var(--red-l)}
+.note.ok{border-left-color:var(--green);background:var(--green-l)}
+
+.tbl-tools{display:flex;gap:9px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+.tbl-tools .search{flex:1;min-width:160px;max-width:320px;border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px 11px;font-size:var(--text-sm);background:#fff}
+.tbl-tools .search:focus{outline:none;border-color:var(--gold);box-shadow:var(--focus)}
+.add-btn{background:var(--navy);color:#fff;font-weight:700;font-size:var(--text-xs);padding:8px 14px;border-radius:var(--radius-sm);display:inline-flex;gap:6px;align-items:center}
+.add-btn:hover{background:var(--navy2)}
+.add-btn.alt{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.add-btn.alt:hover{background:var(--gold-l);border-color:var(--gold)}
+.tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius-lg);background:#fff}
+table{border-collapse:collapse;width:100%;font-size:var(--text-sm)}
+thead th{background:var(--navy);color:#fff;font-weight:600;font-size:var(--text-xxs);letter-spacing:.04em;text-transform:uppercase;padding:9px 8px;text-align:left;white-space:nowrap}
+tbody td{padding:3px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:nth-child(even){background:var(--row-alt)}
+tbody tr:hover{background:var(--gold-l)}
+td input,td select,td textarea{width:100%;border:1px solid transparent;background:transparent;padding:5px 6px;border-radius:var(--radius-sm);min-width:60px;transition:border-color var(--transition)}
+td input:focus,td select:focus,td textarea:focus{outline:none;border-color:var(--gold);background:#fff;box-shadow:var(--focus)}
+td textarea.prose{font-family:inherit;font-size:var(--text-sm);line-height:1.4;resize:vertical;overflow:hidden;white-space:pre-wrap;word-break:break-word;min-height:32px;display:block}
+td.prose-cell{vertical-align:top;padding-top:6px}
+td input.num{text-align:right;font-family:'JetBrains Mono',monospace;font-size:var(--text-sm);min-width:78px}
+td.calc{font-family:'JetBrains Mono',monospace;text-align:right;font-weight:700;color:var(--navy);white-space:nowrap}
+.pill{display:inline-block;padding:3px 9px;border-radius:var(--radius-pill);font-size:var(--text-xxs);font-weight:700;white-space:nowrap}
+.pill.g{background:var(--green-l);color:var(--green)} .pill.a{background:var(--amber-l);color:var(--amber)}
+.pill.r{background:var(--red-l);color:var(--red)} .pill.n{background:var(--chip);color:var(--slate)}
+.del{color:var(--slate);font-size:var(--text-icon);width:30px;text-align:center;border-radius:var(--radius-sm);line-height:1}
+.del:hover{color:var(--red);background:var(--red-l)}
+tfoot td{background:var(--gold-l);font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--navy);padding:9px 8px;border-top:2px solid var(--gold)}
+
+#tblContatos{min-width:1240px}
+#tblContatos td:nth-child(2){min-width:230px}
+#tblContatos td:nth-child(3){min-width:150px}
+#tblContatos td:nth-child(4){min-width:170px}
+#tblContatos td:nth-child(5){min-width:135px}
+#tblContatos td:nth-child(6){min-width:160px}
+#tblContatos td:nth-child(7){min-width:150px}
+#tblContatos td:nth-child(8){min-width:120px}
+#tblContatos td:nth-child(9){min-width:230px}
+#tblContatos td:nth-child(10){min-width:135px}
+#tblCampanhas{min-width:1500px}
+#tblCampanhas td:nth-child(2){min-width:96px}
+#tblCampanhas td:nth-child(3){min-width:150px}
+#tblCampanhas td:nth-child(4){min-width:280px}
+#tblCampanhas td:nth-child(5){min-width:250px}
+#tblCampanhas td:nth-child(6){min-width:130px}
+#tblWarmup{min-width:900px}
+#tblWarmup td:nth-child(6){min-width:300px}
+#tblChecklist{min-width:1000px}
+#tblChecklist td:nth-child(3){min-width:420px}
+#tblChecklist td:nth-child(4){min-width:170px}
+#tblRiscos{min-width:1100px}
+#tblRiscos td:nth-child(2){min-width:300px}
+#tblRiscos td:nth-child(5){min-width:380px}
+#tblDns{min-width:980px}
+#tblDns td:nth-child(3){min-width:330px}
+#tblDns td:nth-child(4){min-width:270px}
+
+.cfg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.fld{background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:11px 13px}
+.fld label{display:block;font-family:'JetBrains Mono',monospace;font-size:var(--text-xxs);letter-spacing:.05em;text-transform:uppercase;color:var(--slate);margin-bottom:5px}
+.fld input,.fld select,.fld textarea{width:100%;border:1px solid var(--line);border-radius:var(--radius-sm);padding:7px 9px;font-size:var(--text-sm);background:#fff}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--gold);box-shadow:var(--focus)}
+.fld .hint{font-size:var(--text-xxs);color:var(--slate);margin-top:5px;line-height:1.4}
+.fld.full{grid-column:1/-1}
+
+.ed-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.ed-col{min-width:0}
+.ed-col .fld{margin-bottom:10px}
+.prev-wrap{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm)}
+.prev-bar{background:var(--navy);color:#fff;padding:8px 14px;font-size:var(--text-xs);font-family:'JetBrains Mono',monospace}
+.prev-subj{padding:11px 14px 2px;font-weight:800;font-size:var(--text-base);color:var(--ink)}
+.prev-pre{padding:0 14px 11px;font-size:var(--text-xs);color:var(--slate);border-bottom:1px solid var(--line)}
+.cor-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cor-item{background:#fff;border:1px solid var(--line);border-radius:var(--radius-md);padding:9px 11px}
+.cor-item label{display:block;font-size:var(--text-xs);color:var(--ink-2);margin-bottom:6px;font-weight:600}
+.cor-row{display:flex;gap:7px;align-items:center}
+.cor-row input[type=color]{width:38px;height:30px;padding:0;border:1px solid var(--line);border-radius:var(--radius-sm);background:#fff;cursor:pointer;flex:none}
+.cor-row input[type=text]{flex:1;min-width:0;border:1px solid var(--line);border-radius:var(--radius-sm);padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:var(--text-xs);text-transform:uppercase}
+.cor-row input:focus{outline:none;border-color:var(--gold);box-shadow:var(--focus)}
+.preset-btn{font-size:var(--text-xs);font-weight:700;padding:7px 12px;border-radius:var(--radius-pill);border:1px solid var(--line);background:#fff;color:var(--navy)}
+.preset-btn:hover{border-color:var(--gold);background:var(--gold-l)}
+@media(max-width:1100px){.cor-grid{grid-template-columns:1fr}}
+.gate-item{display:flex;gap:9px;align-items:flex-start;font-size:var(--text-sm);padding:6px 0;border-bottom:1px solid var(--line);line-height:1.45}
+.gate-item b{font-family:'JetBrains Mono',monospace;font-size:var(--text-xxs);padding:2px 7px;border-radius:var(--radius-pill);white-space:nowrap;margin-top:1px}
+.gate-ok b{background:var(--green-l);color:var(--green)}
+.gate-warn b{background:var(--amber-l);color:var(--amber)}
+.gate-bad b{background:var(--red-l);color:var(--red)}
+@media(max-width:1100px){.ed-grid{grid-template-columns:1fr}}
+.tpl-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.tpl-card h3{font-size:var(--text-base);color:var(--navy);margin-bottom:4px}
+.tpl-card .meta{font-size:var(--text-xs);color:var(--slate);margin-bottom:10px}
+.tpl-card textarea.code{width:100%;height:160px;font-family:'JetBrains Mono',monospace;font-size:var(--text-xs);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px;resize:vertical;background:var(--row-alt)}
+.tpl-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+
+.chart-box{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);overflow-x:auto}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:var(--text-xs);color:var(--slate);margin-top:8px}
+.legend span i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.modal-bg{position:fixed;inset:0;background:rgba(16,20,40,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);max-width:760px;width:100%;max-height:86vh;display:flex;flex-direction:column;overflow:hidden}
+.modal h3{background:var(--navy);color:#fff;font-size:var(--text-base);padding:14px 18px;margin:0}
+.modal .body{padding:16px 18px;overflow:auto}
+.modal .body p{font-size:var(--text-sm);color:var(--ink-2);margin:0 0 10px;line-height:1.5}
+.modal textarea{width:100%;height:210px;font-family:'JetBrains Mono',monospace;font-size:var(--text-xs);border:1px solid var(--line);border-radius:var(--radius-sm);padding:10px;resize:vertical}
+.modal .foot{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line);background:var(--row-alt)}
+.mbtn{padding:9px 15px;border-radius:var(--radius-sm);font-size:var(--text-sm);font-weight:700;border:1px solid var(--line);background:#fff;color:var(--navy)}
+.mbtn.primary{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.mbtn.danger{background:var(--red);border-color:var(--red);color:#fff}
+.mbtn.ghost{color:var(--slate)}
+
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--navy);color:#fff;padding:12px 20px;border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:600;box-shadow:var(--shadow-lg);z-index:100;transition:transform var(--transition-slow);display:flex;gap:9px;align-items:center}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast .dot{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.cfg-grid{grid-template-columns:1fr}}
+@media print{
+  .toolbar,.tabs,.tbl-tools,.add-btn,.del,.tb-note,.tpl-actions{display:none!important}
+  .view{display:none!important} .view.active{display:block!important}
+  .hdr{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff} .wrap{padding:10px}
+  .kpi,.tpl-card{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <div class="hdr-mark">RF</div>
+    <div class="hdr-txt">
+      <div class="hdr-eyebrow">R. Feitosa Group</div>
+      <div class="hdr-title">Rfast Mail — Central de Disparo</div>
+      <div class="hdr-meta">
+        <span>Protocolo operacional de e-mail · caminho Conservador</span>
+        <span>Atualizado: <span id="verTxt">—</span></span>
+      </div>
+    </div>
+    <div id="statusWrap"></div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <span class="tb-note" id="saveNote">Carregando…</span>
+  <button class="tb-btn primary" onclick="App.save(true)">💾 Salvar</button>
+  <button class="tb-btn" onclick="syncFromShared(true)">🔄 Sincronizar</button>
+  <button class="tb-btn" onclick="App.exportJSON()">⬇ Exportar dados (JSON)</button>
+  <button class="tb-btn" onclick="App.importPrompt()">⬆ Importar</button>
+  <button class="tb-btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+  <button class="tb-btn" onclick="App.reset()">↺ Restaurar original</button>
+</div>
+
+<nav class="tabs" id="tabs"></nav>
+
+<div class="wrap">
+
+  <section class="view active" data-view="dashboard">
+    <div class="kpi-grid" id="kpiGrid"></div>
+    <div id="alertBox"></div>
+    <div class="section-h"><span class="n">i.</span><h2>Evolução das taxas por campanha</h2><span class="rule"></span></div>
+    <div class="chart-box"><div id="chart"></div>
+      <div class="legend">
+        <span><i style="background:#1E7A46"></i>Taxa de entrega</span>
+        <span><i style="background:#C9A84C"></i>Abertura</span>
+        <span><i style="background:#2A2E4A"></i>CTR</span>
+      </div>
+    </div>
+    <div class="section-h"><span class="n">ii.</span><h2>Base por frente</h2><span class="rule"></span></div>
+    <div class="chart-box"><div id="chartFrente"></div></div>
+  </section>
+
+  <section class="view" data-view="config">
+    <div class="note"><b>Preencha esta aba primeiro.</b> Os registros de DNS, o rodapé legal e os três templates de e-mail são gerados automaticamente a partir daqui. Nada mais funciona direito enquanto o domínio e os subdomínios não estiverem definidos.</div>
+    <div class="section-h"><span class="n">i.</span><h2>Identidade de envio</h2><span class="rule"></span></div>
+    <div class="cfg-grid" id="cfgGrid"></div>
+    <div class="section-h"><span class="n">ii.</span><h2>Registros de DNS a publicar</h2><span class="rule"></span></div>
+    <div class="note warn"><b>Regra de bloqueio.</b> Nenhum disparo acontece antes do código de verificação, do DKIM e do DMARC estarem publicados e validados. Os valores reais só existem depois que você adicionar o domínio dentro da plataforma. <b>No Hostinger (hPanel → Domínios → Zona DNS):</b> o painel acrescenta o domínio sozinho ao que você digitar no campo Nome — digite apenas <span class="mono">_dmarc</span> ou <span class="mono">[seletor]._domainkey</span>, nunca o endereço completo, sob pena de virar <span class="mono">_dmarc.connectvaley.com.br.connectvaley.com.br</span>.</div>
+    <div class="tbl-scroll"><table id="tblDns"></table></div>
+    <div class="note"><b>Se você criar caixa própria no domínio (contato@…), a ordem importa.</b>
+      Crie a caixa <u>primeiro</u> e só depois autentique a plataforma de disparo. O provedor de e-mail publica MX e SPF próprios ao ativar a caixa;
+      se a plataforma já tiver deixado um SPF lá, você fica com <b>dois registros SPF</b> — e dois SPF no mesmo domínio é erro permanente, não é "dois autorizados".
+      A regra da zona DNS é: <b>um único SPF</b> (com todos os <span class="mono">include:</span> reunidos no mesmo registro), <b>um único DMARC</b>, e
+      <b>quantos DKIM quiser</b> — DKIM não conflita porque cada serviço usa o seu próprio seletor. Pegue o valor exato de <span class="mono">include:</span>
+      no painel do seu provedor; ele varia e não deve ser copiado de tutorial. Remova qualquer MX que não seja do provedor da caixa: MX misturado perde mensagem.
+      E lembre: a caixa serve para <u>receber respostas</u>, não para disparar campanha — o envio em massa sai sempre pela plataforma.</div>
+    <div class="section-h"><span class="n">iii.</span><h2>Rodapé legal obrigatório</h2><span class="rule"></span></div>
+    <div class="tpl-card">
+      <div class="meta">Gerado a partir dos dados acima. Deve constar no fim de <b>todo</b> e-mail disparado. Revisão jurídica antes do primeiro envio.</div>
+      <textarea id="rodapeTa" class="code" readonly></textarea>
+      <div class="tpl-actions"><button class="add-btn alt" onclick="copyText(document.getElementById('rodapeTa'))">Copiar rodapé</button></div>
+    </div>
+  </section>
+
+  <section class="view" data-view="contatos">
+    <div class="note"><b>Regra da base.</b> Contato sem base legal declarada não é disparável — ele aparece no alerta do dashboard e é excluído da exportação. Use <i>legítimo interesse</i> apenas para quem já tem relação com o escritório; <i>consentimento</i> exige evidência (inscrição, formulário, aceite registrado).</div>
+    <div class="tbl-tools">
+      <input class="search" placeholder="Buscar por e-mail, nome, empresa…" oninput="App.filter('contatos',this.value)">
+      <select id="fFrente" onchange="App.filterFrente(this.value)" style="border:1px solid var(--line);border-radius:var(--radius-sm);padding:8px 10px;font-size:var(--text-sm);background:#fff">
+        <option value="">Todas as frentes</option>
+        <option>Relacionamento</option><option>Connect Valley</option><option>Connect Academy</option><option>Prospecção</option>
+      </select>
+      <span style="flex:1"></span>
+      <button class="add-btn alt" onclick="App.importCSV()">⬆ Importar CSV</button>
+      <button class="add-btn alt" onclick="App.exportCSV()">⬇ Exportar p/ plataforma</button>
+      <button class="add-btn" onclick="App.addRow('contatos')">＋ Contato</button>
+    </div>
+    <div class="tbl-scroll"><table id="tblContatos" data-coll="contatos"></table></div>
+  </section>
+
+  <section class="view" data-view="campanhas">
+    <div class="note"><b>Fluxo.</b> Crie a campanha, dispare na plataforma contratada e volte aqui para lançar os números do relatório. As três últimas colunas calculam sozinhas e alimentam o dashboard e o gráfico.</div>
+    <div class="tbl-tools">
+      <input class="search" placeholder="Buscar campanha…" oninput="App.filter('campanhas',this.value)">
+      <span style="flex:1"></span>
+      <button class="add-btn" onclick="App.addRow('campanhas')">＋ Campanha</button>
+    </div>
+    <div class="tbl-scroll"><table id="tblCampanhas" data-coll="campanhas"></table></div>
+  </section>
+
+  <section class="view" data-view="warmup">
+    <div class="note warn"><b>Não ultrapasse o limite diário.</b> Subdomínio novo que dispara em massa no primeiro dia cai em spam e queima a reputação por meses. Se bounce passar de 2% ou reclamação de 0,3% em qualquer dia, pause e volte ao limite do dia anterior.</div>
+    <div class="tbl-scroll"><table id="tblWarmup" data-coll="warmup"></table></div>
+  </section>
+
+  <section class="view" data-view="editor">
+    <div class="note"><b>Escreva em texto simples; sai HTML de e-mail.</b>
+      Marcação aceita: <span class="mono"># título</span>, <span class="mono">## subtítulo</span>, <span class="mono">- item de lista</span>,
+      <span class="mono">&gt; destaque</span>, <span class="mono">[texto do botão](link)</span>, <span class="mono">**negrito**</span>. Linha em branco separa parágrafos.
+      Personalize com <span class="mono">{{primeiro_nome|Olá}}</span> — o texto após a barra é o que aparece quando o dado não existe.</div>
+    <div class="ed-grid">
+      <div class="ed-col">
+        <div class="fld"><label>Template</label><select id="tplSel"></select>
+          <div class="hint">Editar aqui altera o template salvo. Use "Novo template" para criar outro.</div></div>
+        <div class="fld"><label>Nome interno</label><input data-tpl="nome"></div>
+        <div class="fld"><label>Linha de assunto</label><input data-tpl="assunto">
+          <div class="hint" id="assuntoHint"></div></div>
+        <div class="fld"><label>Preheader (prévia na caixa de entrada)</label><input data-tpl="preheader">
+          <div class="hint">Aparece cinza ao lado do assunto. Sem ele, o cliente de e-mail mostra o começo do corpo.</div></div>
+        <div class="fld"><label>Corpo</label><textarea data-tpl="corpo" id="corpoTa" class="code" style="height:400px;font-family:'JetBrains Mono',monospace;font-size:var(--text-xs);line-height:1.6"></textarea></div>
+        <div class="tpl-actions">
+          <button class="add-btn alt" onclick="App.addTemplate()">＋ Novo template</button>
+          <button class="add-btn alt" onclick="App.delTemplate()">Excluir template</button>
+        </div>
+        <div class="section-h"><span class="n">i.</span><h2>Verificação antes de enviar</h2><span class="rule"></span></div>
+        <div id="gate"></div>
+      </div>
+      <div class="ed-col">
+        <div class="fld"><label>Pré-visualizar com o contato</label><select id="prevSel"></select>
+          <div class="hint">Os tokens são substituídos pelos dados reais desse contato. Sem contato, valem os fallbacks.</div></div>
+        <div class="prev-wrap">
+          <div class="prev-bar"><span id="prevFrom"></span></div>
+          <div class="prev-subj" id="prevSubj"></div>
+          <div class="prev-pre" id="prevPre"></div>
+          <div id="prevBody"></div>
+        </div>
+        <div class="section-h"><span class="n">ii.</span><h2>Marca e cores</h2><span class="rule"></span></div>
+        <div class="note">Vale para <b>todos</b> os templates. Clique num quadrado para abrir o seletor de cores, ou digite o código ao lado. O preview acima muda na hora.</div>
+        <div id="presetBar" class="tpl-actions" style="margin-bottom:12px"></div>
+        <div id="marcaBox"></div>
+        <div class="section-h"><span class="n">iii.</span><h2>Exportar</h2><span class="rule"></span></div>
+        <div class="note">Para disparo em massa use o <b>HTML com tokens da plataforma</b> — a substituição acontece no envio, um valor por destinatário.
+          O <b>HTML mesclado</b> serve para teste ou envio individual.</div>
+        <div class="tpl-actions">
+          <button class="add-btn" onclick="App.exportTpl('brevo')">HTML com tokens</button>
+          <button class="add-btn alt" onclick="App.exportTpl('merged')">HTML mesclado</button>
+          <button class="add-btn alt" onclick="App.exportTpl('texto')">Versão texto</button>
+        </div>
+        <div class="section-h"><span class="n">iv.</span><h2>Disparar</h2><span class="rule"></span></div>
+        <div class="note warn"><b>O envio é real e não tem desfazer.</b> A fila é montada com os contatos ativos e com base legal declarada da frente escolhida. Comece sempre por uma frente de teste com poucos endereços seus.</div>
+        <div class="tpl-actions"><button class="add-btn" style="background:var(--gold);color:var(--navy);font-weight:800" onclick="App.dispararPrompt()">🚀 Disparar campanha</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" data-view="checklist">
+    <div class="note" id="chkNote"></div>
+    <div class="tbl-scroll"><table id="tblChecklist" data-coll="checklist"></table></div>
+  </section>
+
+  <section class="view" data-view="riscos">
+    <div class="tbl-scroll"><table id="tblRiscos" data-coll="riscos"></table></div>
+  </section>
+
+</div>
+
+<div id="modalBg" class="modal-bg" role="dialog" aria-modal="true">
+  <div class="modal"><h3 id="modalTitle">—</h3><div class="body" id="modalBody"></div><div class="foot" id="modalFoot"></div></div>
+</div>
+<div id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
+
+<script>
+const SEED = {
+  meta:{versao:new Date().toLocaleDateString('pt-BR')},
+  config:[{_id:'cfg',
+    dominio:'connectvaley.com.br', subRel:'connectvaley.com.br', subProsp:'', subEvt:'',
+    plataforma:'Brevo', plano:'Free (300/dia) ou Starter', fromNome:'Roneely Feitosa | Connect Valley',
+    fromEmail:'contato@connectvaley.com.br', replyTo:'contato@connectvaley.com.br',
+    razao:'Razão Social Teste Ltda (PROVISÓRIO)', cnpj:'00.000.000/0001-00', endereco:'Rua Teste, 100 — Centro, Sobral/CE, CEP 62000-000 (PROVISÓRIO)', responsavel:'Roneely', dmarcRua:'contato@connectvaley.com.br',
+    marcaTexto:'Roneely Feitosa | Connect Valley', logoUrl:'',
+    corFundo:'#F4F5F8', corHeaderBg:'#1A1A2E', corHeaderTxt:'#C9A84C', corCardBg:'#FFFFFF',
+    corTitulo:'#1A1A2E', corTexto:'#33384A', corBotaoBg:'#C9A84C', corBotaoTxt:'#1A1A2E',
+    corDestaqueBg:'#F4ECD6', corDestaqueTxt:'#1A1A2E', corRodapeTxt:'#6B7280'}],
+  contatos:[
+    {_id:'c1',email:'exemplo@empresa.com.br',nome:'Fulano de Tal',empresa:'Varejo Exemplo Ltda',frente:'Relacionamento',origem:'Carteira do escritório',baseLegal:'legitimo_interesse',dataConsent:'',evidencia:'Contrato de honorários vigente nº 000/2026',status:'ativo'}
+  ],
+  campanhas:[
+    {_id:'k1',data:'',frente:'Relacionamento',nome:'Piloto — 200 contatos mais engajados',assunto:'',status:'Planejada',enviados:0,entregues:0,aberturas:0,cliques:0,bounces:0,reclamacoes:0,descadastros:0},
+    {_id:'k2',data:'',frente:'Relacionamento',nome:'Newsletter jurídica nº 1',assunto:'',status:'Planejada',enviados:0,entregues:0,aberturas:0,cliques:0,bounces:0,reclamacoes:0,descadastros:0},
+    {_id:'k3',data:'',frente:'Connect Academy',nome:'Abertura de turma — imersão',assunto:'',status:'Planejada',enviados:0,entregues:0,aberturas:0,cliques:0,bounces:0,reclamacoes:0,descadastros:0},
+    {_id:'k4',data:'',frente:'Prospecção',nome:'Sequência fria — lote 1 (subdomínio separado)',assunto:'',status:'Planejada',enviados:0,entregues:0,aberturas:0,cliques:0,bounces:0,reclamacoes:0,descadastros:0}
+  ],
+  warmup:[],
+  checklist:[
+    {_id:'x01',onda:'O0',prazo:'D+0',tarefa:'Definir plataforma SaaS e confirmar o preço na página oficial do fornecedor',resp:'Roneely',status:'Pendente'},
+    {_id:'x02',onda:'O0',prazo:'D+0',tarefa:'Conferir no hPanel a grafia exata do domínio registrado antes de comprar caixa ou publicar registro',resp:'Roneely',status:'Pendente'},
+    {_id:'x02b',onda:'O0',prazo:'D+1',tarefa:'Criar a caixa contato@ no Hostinger e publicar MX + SPF da caixa ANTES de autenticar a plataforma de disparo',resp:'TI',status:'Pendente'},
+    {_id:'x03',onda:'O0',prazo:'D+1',tarefa:'Mapear origem e base legal de cada lista já existente',resp:'Jurídico interno',status:'Pendente'},
+    {_id:'x04',onda:'O1',prazo:'D+1',tarefa:'Criar conta na plataforma e verificar o subdomínio de relacionamento',resp:'TI',status:'Pendente'},
+    {_id:'x05',onda:'O1',prazo:'D+1',tarefa:'Adicionar connectvaley.com.br na plataforma e copiar os valores de verificação e DKIM',resp:'TI',status:'Pendente'},
+    {_id:'x06',onda:'O1',prazo:'D+2',tarefa:'Publicar código de verificação, DKIM e DMARC (p=none) na Zona DNS do Hostinger',resp:'TI',status:'Pendente'},
+    {_id:'x07',onda:'O1',prazo:'D+3',tarefa:'Validar autenticação em ferramenta de teste de entregabilidade',resp:'TI',status:'Pendente'},
+    {_id:'x08',onda:'O2',prazo:'D+3',tarefa:'Higienizar a base: remover duplicados, inválidos e contatos sem base legal',resp:'Operação',status:'Pendente'},
+    {_id:'x09',onda:'O2',prazo:'D+4',tarefa:'Importar a base segmentada por frente na plataforma',resp:'Operação',status:'Pendente'},
+    {_id:'x10',onda:'O2',prazo:'D+4',tarefa:'Configurar link de descadastro e página de preferências',resp:'Operação',status:'Pendente'},
+    {_id:'x11',onda:'O3',prazo:'D+5',tarefa:'Aprovar o rodapé legal e o template-mestre da marca',resp:'Jurídico + Marketing',status:'Pendente'},
+    {_id:'x12',onda:'O3',prazo:'D+6',tarefa:'Adaptar os três templates iniciais (newsletter, evento, prospecção)',resp:'Marketing',status:'Pendente'},
+    {_id:'x13',onda:'O4',prazo:'D+7',tarefa:'Disparo-piloto para 30 caixas — inclua um Gmail, um Outlook e um Yahoo para conferir onde cai',resp:'Operação',status:'Pendente'},
+    {_id:'x14',onda:'O4',prazo:'D+8 a D+21',tarefa:'Executar a rampa de warm-up conforme a aba correspondente',resp:'Operação',status:'Pendente'},
+    {_id:'x15',onda:'O5',prazo:'D+21',tarefa:'Revisar KPIs, elevar DMARC para p=quarantine e liberar volume pleno',resp:'Roneely',status:'Pendente'},
+    {_id:'x16',onda:'O5',prazo:'D+30',tarefa:'Decidir sobre a evolução para painel próprio (caminho Balanceado)',resp:'Roneely',status:'Pendente'}
+  ],
+  templates:[
+    {_id:'t1',nome:'Newsletter — carteira e base Connect',frente:'Relacionamento',
+     assunto:'{{primeiro_nome|Olá}}, o que muda com [tema] na prática',
+     preheader:'Resumo em 2 minutos do que isso significa para a sua operação.',
+     corpo:'# {{primeiro_nome|Olá}}, isso chega até a sua operação\n\nUma frase sobre o fato novo — decisão, norma, prazo — e por que ele importa para quem toca uma empresa como a {{empresa|sua}}.\n\n## O que muda na prática\n\n- Efeito direto número um\n- Efeito direto número dois\n- Efeito direto número três\n\n> O prazo para se adequar é [data]. Depois disso, [consequência].\n\n## O que recomendamos\n\nAção concreta, com responsável e prazo. Uma só — lista de dez vira lista de zero.\n\n[Falar com o escritório](https://connectvaley.com.br)\n\nSe preferir, responda a este e-mail. Ele chega direto na nossa equipe.'},
+    {_id:'t2',nome:'Evento — Connect Valley / Academy',frente:'Connect Valley',
+     assunto:'{{primeiro_nome|Olá}}, sua vaga no [evento] está aberta',
+     preheader:'Data, local e o que você sai sabendo fazer.',
+     corpo:'# {{primeiro_nome|Olá}}, o futuro começa agora\n\nUma frase sobre o que o participante sai sabendo fazer — não sobre o que o evento é.\n\n> Data: [data] · Local: [local] · Investimento: [valor] · Vagas: [número]\n\n## Por que este ano é diferente\n\n- Motivo um\n- Motivo dois\n- Motivo três\n\n[Garantir minha vaga](https://connectvaley.com.br)\n\nDúvidas sobre o conteúdo? Responda a este e-mail.'},
+    {_id:'t3',nome:'Primeiro contato — B2B',frente:'Prospecção',
+     assunto:'{{empresa|Sua empresa}} — [observação específica]',
+     preheader:'Contato transparente: digo de onde vim logo na primeira linha.',
+     corpo:'# {{primeiro_nome|Bom dia}}\n\nSou [seu nome], do R. Feitosa Group. Cheguei até você por [origem real e verificável]. Registro isso logo de início, por transparência.\n\nUma observação específica sobre a {{empresa|sua empresa}} — não sobre o escritório. Se não houver observação específica, não envie este e-mail.\n\n## O que eu proponho\n\nEm 15 minutos consigo mostrar [resultado concreto que outro cliente do mesmo porte obteve].\n\n[Ver agenda de 15 minutos](https://connectvaley.com.br)\n\nSe não fizer sentido, responda apenas "não" — não insistirei.'}
+  ],
+  riscos:[
+    {_id:'r1',risco:'Prospecção fria contamina a reputação do domínio institucional',prob:'Alta',impacto:'Crítico',mitig:'Subdomínio e conta de envio separados para prospecção; jamais misturar com relacionamento',resp:'',status:'Aberto'},
+    {_id:'r2',risco:'Contato sem base legal LGPD documentada',prob:'Média',impacto:'Crítico',mitig:'Base legal obrigatória por contato; evidência arquivada; purga do que não tiver lastro',resp:'',status:'Aberto'},
+    {_id:'r3',risco:'Ausência de SPF/DKIM/DMARC no momento do disparo',prob:'Média',impacto:'Alto',mitig:'Bloquear qualquer envio até os três registros estarem publicados e validados',resp:'',status:'Aberto'},
+    {_id:'r4',risco:'Reclamação formal de destinatário ou notificação extrajudicial',prob:'Média',impacto:'Alto',mitig:'Rodapé com razão social, CNPJ, endereço, motivo do contato e opt-out em um clique; log de origem por contato',resp:'',status:'Aberto'},
+    {_id:'r5',risco:'Bounce acima do limite por base desatualizada',prob:'Alta',impacto:'Alto',mitig:'Higienização antes do primeiro disparo; supressão automática de bounce hard; gatilho de parada nos KPIs',resp:'',status:'Aberto'},
+    {_id:'r6',risco:'Marketing enviado sob plano/termos de uso transacional',prob:'Média',impacto:'Médio',mitig:'Contratar a faixa correta na plataforma e ler os termos antes de importar a base',resp:'',status:'Aberto'},
+    {_id:'r7',risco:'Dependência de fornecedor — base presa dentro do SaaS',prob:'Média',impacto:'Médio',mitig:'Exportar base e métricas mensalmente para o Drive corporativo; esta plataforma é a fonte de verdade',resp:'',status:'Aberto'},
+    {_id:'r8',risco:'Envio duplicado ou disparo indevido por erro humano',prob:'Média',impacto:'Médio',mitig:'Dupla aprovação: quem monta não é quem dispara; teste em caixa interna antes de cada campanha',resp:'',status:'Aberto'},
+    {_id:'r12',risco:'Dois registros SPF no mesmo domínio após somar caixa própria + plataforma de disparo',prob:'Alta',impacto:'Alto',mitig:'Um único registro SPF com todos os include reunidos; conferir com verificador antes do primeiro disparo; vigiar o teto de 10 lookups',resp:'',status:'Aberto'},
+    {_id:'r10',risco:'Descompasso de marca: cliente do escritório recebe e-mail de domínio de evento',prob:'Alta',impacto:'Alto',mitig:'Nome do remetente amarrando as duas marcas ("Roneely Feitosa | Connect Valley") e primeira linha do corpo explicando de onde vem o contato; conteúdo jurídico puro só quando houver domínio do escritório autenticado',resp:'',status:'Aberto'},
+    {_id:'r11',risco:'Disparo em massa a partir de caixa pessoal (Gmail/Outlook) em cópia oculta',prob:'Média',impacto:'Crítico',mitig:'Nunca disparar da caixa pessoal: limite diário baixo, sem descadastro, sem métrica e risco de bloqueio da própria conta. O envio sai sempre pela plataforma',resp:'',status:'Aberto'},
+    {_id:'r9',risco:'Volume ultrapassa a faixa contratada',prob:'Baixa',impacto:'Baixo',mitig:'Monitorar o acumulado do warm-up e o total de enviados; revisar plano ao cruzar 80% da faixa',resp:'',status:'Aberto'}
+  ]
+};
+(function(){ var lim=[30,50,80,120,200,300,450,600,800,1000];
+  for(var i=0;i<lim.length;i++){ SEED.warmup.push({_id:'w'+(i+1),dia:i+1,data:'',limite:lim[i],enviados:0,obs:''}); } })();
+
+const KEY='rfast_mail_v1';
+const SHARED=true;
+
+const _mem={};
+let storageOk = !!(window.storage && window.storage.get && window.storage.set);
+let localOk=false;
+if(!storageOk){ try{ localStorage.setItem('__rfast_probe__','1'); localStorage.removeItem('__rfast_probe__'); localOk=true; }catch(e){ localOk=false; } }
+let lastSnapshot='', ops=[];
+const Store={
+  async get(k){
+    if(storageOk){ try{ const r=await window.storage.get(k,SHARED); return r?r.value:null; }catch(e){ return null; } }
+    if(localOk){ try{ return localStorage.getItem(k); }catch(e){ localOk=false; } }
+    return _mem[k]??null;
+  },
+  async set(k,v){
+    if(storageOk){ try{ await window.storage.set(k,v,SHARED); return true; }catch(e){ storageOk=false; } }
+    if(localOk){ try{ localStorage.setItem(k,v); _mem[k]=v; return true; }catch(e){ localOk=false; } }
+    _mem[k]=v; return false;
+  }
+};
+const uid=()=>'r'+Math.random().toString(36).slice(2,10);
+const ROWCOLS=['config','contatos','campanhas','warmup','checklist','riscos','templates'];
+function stampIds(d){ ROWCOLS.forEach(c=>(d[c]||[]).forEach(r=>{ if(!r._id)r._id=uid(); })); return d; }
+function op(o){ ops.push(o); }
+function applyOps(base){
+  ops.forEach(o=>{
+    if(o.t==='set'){ const row=(base[o.coll]||[]).find(r=>r._id===o.id); if(row)row[o.key]=o.val; }
+    else if(o.t==='add'){ base[o.coll]=base[o.coll]||[]; if(!base[o.coll].some(r=>r._id===o.row._id)) base[o.coll].push(o.row); }
+    else if(o.t==='del'){ base[o.coll]=(base[o.coll]||[]).filter(r=>r._id!==o.id); }
+  });
+  return base;
+}
+function isTyping(){ const el=document.activeElement; return !!el && (el.matches('input,textarea,select')||el.isContentEditable); }
+async function syncFromShared(manual){
+  if(!SHARED||!storageOk)return;
+  if(!manual && isTyping())return;
+  const raw=await Store.get(KEY);
+  if(!raw||raw===lastSnapshot){ if(manual)App.toast('Já está atualizado'); return; }
+  lastSnapshot=raw; state=stampIds(JSON.parse(raw)); applyOps(state);
+  App.renderAll(); App.toast(manual?'Sincronizado':'Atualizado com edições da equipe');
+}
+
+const Modal={
+  open(title,bodyHTML,buttons){
+    document.getElementById('modalTitle').textContent=title;
+    document.getElementById('modalBody').innerHTML=bodyHTML;
+    const f=document.getElementById('modalFoot'); f.innerHTML='';
+    buttons.forEach(b=>{ const el=document.createElement('button'); el.className='mbtn '+(b.cls||''); el.textContent=b.label; el.onclick=b.on; f.appendChild(el); });
+    document.getElementById('modalBg').classList.add('open');
+  },
+  close(){ document.getElementById('modalBg').classList.remove('open'); }
+};
+function askConfirm(title,msg){ return new Promise(res=>{ Modal.open(title,'<p>'+msg+'</p>',[
+  {label:'Cancelar',cls:'ghost',on:()=>{Modal.close();res(false);}},
+  {label:'Confirmar',cls:'danger',on:()=>{Modal.close();res(true);}} ]); }); }
+function copyText(ta){
+  try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(ta.value).then(()=>App.toast('Copiado')).catch(()=>{ta.select();App.toast('Selecionado — Ctrl+C');}); return; } }catch(e){}
+  ta.select();
+  try{ if(document.execCommand&&document.execCommand('copy')){ App.toast('Copiado'); return; } }catch(e){}
+  App.toast('Selecionado — pressione Ctrl+C');
+}
+function tryDownload(txt,fname,mime){
+  try{ const blob=new Blob([txt],{type:mime||'application/json'}); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=fname||'dados.json'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500); App.toast('Se não baixar, use "Copiar"'); }
+  catch(e){ App.toast('Download bloqueado — use "Copiar"'); }
+}
+
+function esc(s){ return (s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function pnum(v){ if(typeof v==='number')return v; if(!v)return 0; v=(''+v).replace(/\s/g,'').replace(/r\$/gi,''); if(v.includes(',')&&v.includes('.'))v=v.replace(/\./g,'').replace(',','.'); else if(v.includes(','))v=v.replace(',','.'); const n=parseFloat(v); return isNaN(n)?0:n; }
+function fint(n){ return (n||0).toLocaleString('pt-BR',{maximumFractionDigits:0}); }
+function pct(n){ return (isFinite(n)?(n*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1}):'0,0')+'%'; }
+function pct2(n){ return (isFinite(n)?(n*100).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'0,00')+'%'; }
+function div(a,b){ return b>0?a/b:0; }
+function debounce(fn,ms){ let t; return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);}; }
+function inp(val,ph){ return '<input data-f value="'+esc(val)+'"'+(ph?' placeholder="'+esc(ph)+'"':'')+'>'; }
+function txta(val,ph){ return '<textarea class="prose" data-f rows="1"'+(ph?' placeholder="'+esc(ph)+'"':'')+'>'+esc(val)+'</textarea>'; }
+function inti(val){ return '<input class="num" data-f data-num value="'+(val?fint(val):'')+'">'; }
+function optSel(val,opts){ return '<select data-f>'+opts.map(o=>'<option'+(o===val?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>'; }
+function autogrow(el){ el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px'; }
+function growAll(root){ (root||document).querySelectorAll('textarea.prose').forEach(autogrow); }
+function kpiCard(lbl,val,cls,accent,sub){ return '<div class="kpi '+(accent?'accent':'')+'"><div class="lbl">'+lbl+'</div><div class="val '+cls+'">'+val+'</div>'+(sub?'<div class="sub">'+sub+'</div>':'')+'</div>'; }
+
+const FRENTES=['Relacionamento','Connect Valley','Connect Academy','Prospecção'];
+const BASES=['','consentimento','legitimo_interesse','execucao_contrato'];
+const STATUS_C=['ativo','descadastrado','bounce_hard','reclamacao'];
+const STATUS_K=['Planejada','Aprovada','Agendada','Enviada','Pausada','Cancelada'];
+const STATUS_CHK=['Pendente','Em andamento','Concluído','N/A'];
+
+let state;
+function cfg(){ return (state.config&&state.config[0])||{}; }
+function compute(){
+  const C=state.contatos||[], K=state.campanhas||[];
+  const ativos=C.filter(x=>x.status==='ativo');
+  const semBase=C.filter(x=>!x.baseLegal);
+  const porFrente={}; FRENTES.forEach(f=>porFrente[f]=0);
+  ativos.forEach(x=>{ if(porFrente[x.frente]==null)porFrente[x.frente]=0; porFrente[x.frente]++; });
+  const t={enviados:0,entregues:0,aberturas:0,cliques:0,bounces:0,reclamacoes:0,descadastros:0};
+  K.forEach(k=>{ Object.keys(t).forEach(kk=>{ t[kk]+=pnum(k[kk]); }); });
+  const taxaEntrega=div(t.entregues,t.enviados), abertura=div(t.aberturas,t.entregues), ctr=div(t.cliques,t.entregues);
+  const bounceRate=div(t.bounces,t.enviados), spamRate=div(t.reclamacoes,t.entregues), descRate=div(t.descadastros,t.entregues);
+  const enviadas=K.filter(k=>k.status==='Enviada').length;
+  const chkOk=(state.checklist||[]).filter(x=>x.status==='Concluído').length;
+  const wEnv=(state.warmup||[]).reduce((s,w)=>s+pnum(w.enviados),0);
+  const dnsOk=!!(cfg().dominio&&cfg().subRel);
+  let sem='VERDE';
+  if(bounceRate>0.02||spamRate>0.003) sem='VERMELHO';
+  else if(bounceRate>0.005||spamRate>0.0008||semBase.length>0||!dnsOk) sem='AMARELO';
+  return {C,K,ativos,semBase,porFrente,t,taxaEntrega,abertura,ctr,bounceRate,spamRate,descRate,enviadas,chkOk,wEnv,sem};
+}
+
+/* ---------- gráficos SVG (sem dependência externa) ---------- */
+function chartLinhas(el,rows){
+  if(!rows.length){ el.innerHTML='<p style="font-size:12.5px;color:var(--slate);margin:0">Lance os números de pelo menos uma campanha enviada para o gráfico aparecer.</p>'; return; }
+  const W=Math.max(560,rows.length*130), H=250, P={t:18,r:16,b:52,l:46};
+  const iw=W-P.l-P.r, ih=H-P.t-P.b;
+  const series=[['taxaEntrega','#1E7A46'],['abertura','#C9A84C'],['ctr','#2A2E4A']];
+  let g='';
+  for(let i=0;i<=4;i++){ const y=P.t+ih*i/4; const v=1-i/4;
+    g+='<line x1="'+P.l+'" y1="'+y+'" x2="'+(W-P.r)+'" y2="'+y+'" stroke="#E4E6EC" stroke-width="1"/>';
+    g+='<text x="'+(P.l-8)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#6B7280" font-family="JetBrains Mono,monospace">'+Math.round(v*100)+'%</text>'; }
+  const x=i=>P.l+(rows.length===1?iw/2:iw*i/(rows.length-1));
+  series.forEach(([key,cor])=>{
+    let d='';
+    rows.forEach((r,i)=>{ const y=P.t+ih*(1-Math.min(1,r[key])); d+=(i?' L':'M')+x(i)+' '+y; });
+    g+='<path d="'+d+'" fill="none" stroke="'+cor+'" stroke-width="2.4" stroke-linejoin="round"/>';
+    rows.forEach((r,i)=>{ const y=P.t+ih*(1-Math.min(1,r[key])); g+='<circle cx="'+x(i)+'" cy="'+y+'" r="3.6" fill="#fff" stroke="'+cor+'" stroke-width="2.2"/>'; });
+  });
+  rows.forEach((r,i)=>{ const nm=r.nome.length>18?r.nome.slice(0,17)+'…':r.nome;
+    g+='<text x="'+x(i)+'" y="'+(H-30)+'" text-anchor="middle" font-size="10" fill="#33384a">'+esc(nm)+'</text>';
+    g+='<text x="'+x(i)+'" y="'+(H-16)+'" text-anchor="middle" font-size="9" fill="#6B7280">'+esc(r.frente)+'</text>'; });
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" width="'+W+'" height="'+H+'" role="img" aria-label="Evolução das taxas por campanha">'+g+'</svg>';
+}
+function chartBarras(el,pairs){
+  const total=pairs.reduce((s,p)=>s+p[1],0);
+  if(!total){ el.innerHTML='<p style="font-size:12.5px;color:var(--slate);margin:0">Cadastre contatos para ver a distribuição por frente.</p>'; return; }
+  const max=Math.max.apply(null,pairs.map(p=>p[1]));
+  let h='<div style="display:flex;flex-direction:column;gap:9px">';
+  const cores=['#1E7A46','#C9A84C','#A8842F','#2A2E4A'];
+  pairs.forEach((p,i)=>{
+    const w=Math.round(100*p[1]/max);
+    h+='<div style="display:flex;align-items:center;gap:10px"><div style="width:140px;font-size:12.5px;color:var(--ink-2)">'+esc(p[0])+'</div>'+
+       '<div style="flex:1;background:var(--surface-2);border-radius:var(--radius-pill);height:16px;overflow:hidden"><div style="width:'+w+'%;height:100%;background:'+cores[i%4]+';border-radius:var(--radius-pill)"></div></div>'+
+       '<div class="mono" style="width:70px;text-align:right;font-size:12.5px;font-weight:700">'+fint(p[1])+'</div></div>';
+  });
+  h+='</div>';
+  el.innerHTML=h;
+}
+
+/* ---------- render: dashboard ---------- */
+function renderDashboard(){
+  const k=compute();
+  document.getElementById('statusWrap').innerHTML='<div class="statuschip st-'+k.sem+'"><span class="dot"></span>'+
+    (k.sem==='VERDE'?'Operação saudável':k.sem==='AMARELO'?'Atenção — pendências abertas':'PARAR DISPAROS')+'</div>';
+  document.getElementById('kpiGrid').innerHTML=[
+    kpiCard('Contatos disparáveis',fint(k.ativos.length),'v-navy',true,'de '+fint(k.C.length)+' na base'),
+    kpiCard('Sem base legal',fint(k.semBase.length),k.semBase.length?'v-red':'v-green',true,k.semBase.length?'não exportar até resolver':'base regular'),
+    kpiCard('Campanhas enviadas',fint(k.enviadas),'v-navy',false,'de '+fint(k.K.length)+' cadastradas'),
+    kpiCard('Total enviado',fint(k.t.enviados),'v-navy',false,'acumulado nas campanhas'),
+    kpiCard('Taxa de entrega',pct(k.taxaEntrega),k.taxaEntrega>=0.98?'v-green':k.t.enviados?'v-amber':'v-navy',true,'meta ≥ 98%'),
+    kpiCard('Abertura',pct(k.abertura),k.abertura>=0.25?'v-green':k.t.entregues?'v-amber':'v-navy',false,'meta 25–40% (B2B)'),
+    kpiCard('Bounce hard',pct2(k.bounceRate),k.bounceRate>0.02?'v-red':k.bounceRate>0.005?'v-amber':'v-green',true,'parar acima de 2%'),
+    kpiCard('Reclamação de spam',pct2(k.spamRate),k.spamRate>0.003?'v-red':k.spamRate>0.0008?'v-amber':'v-green',true,'parar acima de 0,3%')
+  ].join('');
+
+  const al=[];
+  if(!cfg().dominio||!cfg().subRel) al.push(['warn','<b>Configuração incompleta.</b> Defina o domínio e os subdomínios na aba Configuração — sem isso os registros de DNS e os templates não são gerados.']);
+  if(k.semBase.length) al.push(['warn','<b>'+k.semBase.length+' contato(s) sem base legal declarada.</b> Eles ficam fora da exportação. Resolva na aba Contatos antes de qualquer disparo.']);
+  if(k.bounceRate>0.02) al.push(['warn','<b>PARAR DISPAROS.</b> Bounce hard em '+pct2(k.bounceRate)+', acima do limite de 2%. Higienize a base antes de continuar.']);
+  if(k.spamRate>0.003) al.push(['warn','<b>PARAR DISPAROS.</b> Reclamação de spam em '+pct2(k.spamRate)+', acima do limite de 0,3%. Revise segmentação e frequência.']);
+  if(k.descRate>0.02) al.push(['warn','<b>Descadastro em '+pct2(k.descRate)+'.</b> Acima de 2% indica lista mal segmentada ou conteúdo fora do esperado.']);
+  const prosp=(state.contatos||[]).some(c=>c.frente==='Prospecção');
+  if(prosp && (!cfg().subProsp||cfg().subProsp===cfg().subRel)) al.push(['warn','<b>Prospecção sem subdomínio isolado.</b> Há contatos de prospecção na base e nenhum subdomínio separado configurado. Disparar frio pelo mesmo remetente do relacionamento derruba a entrega da carteira ativa.']);
+  if(!al.length) al.push(['ok','<b>Nenhum bloqueio ativo.</b> Siga a rampa de warm-up e lance os números após cada disparo.']);
+  document.getElementById('alertBox').innerHTML=al.map(a=>'<div class="note '+(a[0]==='warn'?'warn':'ok')+'" style="margin-top:12px">'+a[1]+'</div>').join('');
+
+  const rows=(state.campanhas||[]).filter(c=>pnum(c.enviados)>0).map(c=>({
+    nome:c.nome||'—',frente:c.frente||'',
+    taxaEntrega:div(pnum(c.entregues),pnum(c.enviados)),
+    abertura:div(pnum(c.aberturas),pnum(c.entregues)),
+    ctr:div(pnum(c.cliques),pnum(c.entregues))}));
+  chartLinhas(document.getElementById('chart'),rows);
+  chartBarras(document.getElementById('chartFrente'),FRENTES.map(f=>[f,k.porFrente[f]||0]));
+}
+
+/* ---------- render: configuração ---------- */
+const CFG_FIELDS=[
+  ['dominio','Domínio-mãe','ex.: roneelyfeitosa.com.br','NÃO usar para disparo em massa. Serve de raiz para os subdomínios.'],
+  ['subRel','Domínio de envio · Relacionamento','ex.: connectvaley.com.br','Domínio autenticado na plataforma. Sem reputação prévia e volume baixo, use a raiz — subdomínio só quando houver tráfego institucional a proteger.'],
+  ['subProsp','Subdomínio · Prospecção','deixe vazio na fase 1','Só preencha quando a prospecção fria entrar. Aí é obrigatório isolar em subdomínio e conta separada.'],
+  ['subEvt','Subdomínio · Eventos','deixe vazio na fase 1','Connect Valley e Academy saem pelo mesmo domínio de relacionamento enquanto o volume for baixo.'],
+  ['plataforma','Plataforma contratada','ex.: Brevo','Confirme o preço na página oficial antes de assinar.'],
+  ['plano','Plano / faixa de volume','ex.: Starter 5.000 e-mails/mês','Volume declarado: até 3.000/mês.'],
+  ['fromNome','Nome do remetente','R. Feitosa Group','Aparece na caixa de entrada antes do assunto.'],
+  ['fromEmail','E-mail remetente (From)','ex.: contato@news.roneelyfeitosa.com.br','Nunca usar no-reply em relacionamento.'],
+  ['replyTo','Reply-to','use um e-mail SEU que já funciona','Caixa monitorada por pessoa real. Não precisa ser do domínio de envio — evita comprar caixa na fase 1.'],
+  ['dmarcRua','E-mail para relatórios DMARC','ex.: dmarc@roneelyfeitosa.com.br','Recebe os relatórios de autenticação.'],
+  ['razao','Razão social','','Obrigatória no rodapé legal.'],
+  ['cnpj','CNPJ','','Obrigatório no rodapé legal.'],
+  ['endereco','Endereço completo','','Obrigatório no rodapé legal.'],
+  ['responsavel','Responsável pela operação','','Quem aperta o botão de disparo.']
+];
+function renderConfig(){
+  const c=cfg();
+  document.getElementById('cfgGrid').innerHTML=CFG_FIELDS.map(f=>
+    '<div class="fld'+(f[0]==='endereco'?' full':'')+'"><label>'+esc(f[1])+'</label>'+
+    '<input data-cfg="'+f[0]+'" value="'+esc(c[f[0]]||'')+'" placeholder="'+esc(f[2])+'">'+
+    '<div class="hint">'+esc(f[3])+'</div></div>').join('');
+  const subs=[['Relacionamento',c.subRel],['Prospecção',c.subProsp],['Eventos',c.subEvt]].filter(s=>s[1]);
+  let body='';
+  if(!subs.length){
+    body='<tr><td colspan="5" style="padding:14px;color:var(--slate);font-size:12.5px">Defina ao menos um subdomínio acima para gerar os registros.</td></tr>';
+  }else{
+    subs.forEach(([rot,sub])=>{
+      const dm='_dmarc.'+sub;
+      const rua=c.dmarcRua?('; rua=mailto:'+c.dmarcRua):'';
+      body+=linhaDns(rot,'TXT (código de verificação)',sub,'[código gerado pela plataforma ao adicionar o domínio]','Prova que o domínio é seu — primeiro registro a publicar');
+      body+=linhaDns(rot,'TXT/CNAME (DKIM)','[seletor]._domainkey.'+sub,'[chave gerada pela plataforma]','Assina cada mensagem. É o que sustenta o DMARC — sem isso o Gmail rebaixa o envio');
+      body+=linhaDns(rot,'TXT (DMARC)',dm,'v=DMARC1; p=none'+rua+'; fo=1','Começa em p=none para coletar relatórios; migrar a p=quarantine em D+30');
+      body+=linhaDns(rot,'TXT (SPF) — opcional','(raiz do domínio)','v=spf1 include:spf.brevo.com ~all','Na Brevo, SPF e MX só são exigidos em IP dedicado. Confirme o valor no painel antes de publicar');
+    });
+  }
+  document.getElementById('tblDns').innerHTML=
+    '<thead><tr><th>Frente</th><th>Tipo</th><th>Host / Nome</th><th>Valor</th><th>Função</th></tr></thead><tbody>'+body+'</tbody>';
+  document.getElementById('rodapeTa').value=rodapeTexto();
+}
+function linhaDns(rot,tipo,host,valor,fun){
+  return '<tr><td>'+esc(rot)+'</td><td><b>'+esc(tipo)+'</b></td><td class="mono" style="font-size:11.5px;word-break:break-all">'+esc(host)+
+         '</td><td class="mono" style="font-size:11.5px;word-break:break-all">'+esc(valor)+'</td><td style="font-size:11.5px;color:var(--slate)">'+esc(fun)+'</td></tr>';
+}
+function rodapeTexto(){
+  const c=cfg();
+  return [
+    (c.razao||'[RAZÃO SOCIAL]')+' — CNPJ '+(c.cnpj||'[CNPJ]'),
+    (c.endereco||'[ENDEREÇO COMPLETO]'),
+    '',
+    'Você recebeu esta mensagem porque [motivo do contato: é cliente do escritório / inscreveu-se no Connect Valley / solicitou nosso material].',
+    'Não desejamos ocupar sua caixa sem utilidade: para deixar de receber, clique em [DESCADASTRAR] — o pedido é atendido imediatamente.',
+    'Dúvidas sobre seus dados pessoais? Escreva para '+(c.replyTo||'[e-mail de contato]')+'.',
+    '',
+    'Tratamos seus dados conforme a Lei nº 13.709/2018 (LGPD).'
+  ].join('\n');
+}
+
+/* ---------- editor de e-mail ---------- */
+let tplAtual=null, prevContato='';
+function tplList(){ return state.templates||[]; }
+function tplGet(){ return tplList().find(t=>t._id===tplAtual)||tplList()[0]||null; }
+
+function esc2(s){ return esc(s); }
+function inline(t){
+  t=esc2(t);
+  t=t.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  return t;
+}
+const TEMA_PADRAO={corFundo:'#F4F5F8',corHeaderBg:'#1A1A2E',corHeaderTxt:'#C9A84C',corCardBg:'#FFFFFF',
+  corTitulo:'#1A1A2E',corTexto:'#33384A',corBotaoBg:'#C9A84C',corBotaoTxt:'#1A1A2E',
+  corDestaqueBg:'#F4ECD6',corDestaqueTxt:'#1A1A2E',corRodapeTxt:'#6B7280'};
+const COR_CAMPOS=[
+  ['corHeaderBg','Fundo do cabeçalho'],['corHeaderTxt','Texto do cabeçalho'],
+  ['corCardBg','Fundo do card'],['corFundo','Fundo externo'],
+  ['corTitulo','Títulos'],['corTexto','Texto do corpo'],
+  ['corBotaoBg','Fundo do botão'],['corBotaoTxt','Texto do botão'],
+  ['corDestaqueBg','Caixa de destaque'],['corDestaqueTxt','Texto do destaque'],
+  ['corRodapeTxt','Texto do rodapé']];
+const PRESETS={
+  'Connect Valley':TEMA_PADRAO,
+  'R. Feitosa institucional':{corFundo:'#F4F5F8',corHeaderBg:'#0F2A44',corHeaderTxt:'#FFFFFF',corCardBg:'#FFFFFF',
+    corTitulo:'#0F2A44',corTexto:'#33384A',corBotaoBg:'#C9A84C',corBotaoTxt:'#0F2A44',
+    corDestaqueBg:'#EAEFF5',corDestaqueTxt:'#0F2A44',corRodapeTxt:'#6B7280'},
+  'Claro e minimalista':{corFundo:'#FFFFFF',corHeaderBg:'#FFFFFF',corHeaderTxt:'#111111',corCardBg:'#FFFFFF',
+    corTitulo:'#111111',corTexto:'#444444',corBotaoBg:'#111111',corBotaoTxt:'#FFFFFF',
+    corDestaqueBg:'#F3F4F6',corDestaqueTxt:'#111111',corRodapeTxt:'#888888'},
+  'Escuro':{corFundo:'#0B0B10',corHeaderBg:'#000000',corHeaderTxt:'#C9A84C',corCardBg:'#16161F',
+    corTitulo:'#FFFFFF',corTexto:'#D5D7E0',corBotaoBg:'#C9A84C',corBotaoTxt:'#111111',
+    corDestaqueBg:'#23232F',corDestaqueTxt:'#F0F0F5',corRodapeTxt:'#9498AD'}
+};
+function tema(){ const c=cfg(), t={}; Object.keys(TEMA_PADRAO).forEach(k=>t[k]=c[k]||TEMA_PADRAO[k]); return t; }
+function aplicarPreset(nome){
+  const P=PRESETS[nome]; if(!P)return;
+  const row=cfg();
+  Object.keys(P).forEach(k=>{ row[k]=P[k]; op({t:'set',coll:'config',id:row._id,key:k,val:P[k]}); });
+  marcaMontado=false; renderEditor(); App.save(); App.toast('Paleta "'+nome+'" aplicada');
+}
+let marcaMontado=false;
+function renderMarca(){
+  const c=cfg();
+  const pb=document.getElementById('presetBar');
+  if(pb&&!pb.dataset.on){
+    pb.innerHTML=Object.keys(PRESETS).map(n=>'<button class="preset-btn" data-preset="'+esc(n)+'">'+esc(n)+'</button>').join('');
+    pb.dataset.on='1';
+    pb.addEventListener('click',e=>{ const b=e.target.closest('[data-preset]'); if(b)aplicarPreset(b.dataset.preset); });
+  }
+  const box=document.getElementById('marcaBox'); if(!box)return;
+  if(!marcaMontado){
+    box.innerHTML=
+      '<div class="fld"><label>Nome exibido no cabeçalho do e-mail</label>'+
+      '<input data-cfg="marcaTexto" placeholder="Roneely Feitosa | Connect Valley">'+
+      '<div class="hint">É o texto dourado no topo do e-mail. Independe do nome do remetente na caixa de entrada.</div></div>'+
+      '<div class="fld"><label>Logo (endereço da imagem, opcional)</label>'+
+      '<input data-cfg="logoUrl" placeholder="https://connectvaley.com.br/assets/icone.svg">'+
+      '<div class="hint">Se preenchido, a imagem substitui o texto acima. Use um endereço público e permanente — imagem hospedada em pasta temporária quebra depois.</div></div>'+
+      '<div class="cor-grid">'+COR_CAMPOS.map(([k,rot])=>
+        '<div class="cor-item"><label>'+esc(rot)+'</label><div class="cor-row">'+
+        '<input type="color" data-cfg="'+k+'" data-cor="'+k+'"><input type="text" data-cfg="'+k+'" data-hex="'+k+'" maxlength="7"></div></div>').join('')+
+      '</div>';
+    marcaMontado=true;
+  }
+  ['marcaTexto','logoUrl'].forEach(k=>{
+    const el=box.querySelector('[data-cfg="'+k+'"]');
+    if(el&&document.activeElement!==el) el.value=c[k]||'';
+  });
+  const t=tema();
+  COR_CAMPOS.forEach(([k])=>{
+    const cor=box.querySelector('[data-cor="'+k+'"]'), hex=box.querySelector('[data-hex="'+k+'"]');
+    if(cor&&document.activeElement!==cor) cor.value=t[k];
+    if(hex&&document.activeElement!==hex) hex.value=t[k];
+  });
+}
+
+/* markup-lite -> HTML de e-mail (tabelas, CSS inline) */
+function corpoParaHtml(txt,T){
+  T=T||tema();
+  const linhas=(txt||'').split(/\r?\n/);
+  let out='', lista=[];
+  const P='font-size:15px;color:'+T.corTexto+';line-height:1.65;margin:0 0 14px';
+  function fechaLista(){
+    if(!lista.length)return;
+    out+='      <ul style="font-size:15px;color:'+T.corTexto+';line-height:1.75;padding-left:20px;margin:0 0 14px">'+
+         lista.map(i=>'<li style="margin-bottom:5px">'+inline(i)+'</li>').join('')+'</ul>\n';
+    lista=[];
+  }
+  linhas.forEach(l=>{
+    const t=l.trim();
+    if(t.startsWith('- ')){ lista.push(t.slice(2)); return; }
+    fechaLista();
+    if(!t)return;
+    const btn=t.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if(btn){
+      out+='      <table cellpadding="0" cellspacing="0" style="margin:20px 0"><tr><td style="background:'+T.corBotaoBg+';border-radius:6px">'+
+           '<a href="'+esc2(btn[2])+'" style="display:inline-block;padding:13px 26px;color:'+T.corBotaoTxt+';text-decoration:none;font-weight:bold;font-size:15px">'+
+           esc2(btn[1])+'</a></td></tr></table>\n';
+      return;
+    }
+    if(t.startsWith('## ')){
+      out+='      <h2 style="font-size:17px;color:'+T.corTitulo+';margin:22px 0 10px;line-height:1.35">'+inline(t.slice(3))+'</h2>\n'; return;
+    }
+    if(t.startsWith('# ')){
+      out+='      <h1 style="font-size:22px;color:'+T.corTitulo+';margin:0 0 14px;line-height:1.3">'+inline(t.slice(2))+'</h1>\n'; return;
+    }
+    if(t.startsWith('> ')){
+      out+='      <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 16px;background:'+T.corDestaqueBg+';border-radius:8px">'+
+           '<tr><td style="padding:14px 16px;font-size:14px;color:'+T.corDestaqueTxt+';line-height:1.6">'+inline(t.slice(2))+'</td></tr></table>\n'; return;
+    }
+    out+='      <p style="'+P+'">'+inline(t)+'</p>\n';
+  });
+  fechaLista();
+  return out;
+}
+function corpoParaTexto(txt){
+  return (txt||'').split(/\r?\n/).map(l=>{
+    let t=l.trim();
+    t=t.replace(/^#{1,2}\s+/,'').replace(/\*\*([^*]+)\*\*/g,'$1');
+    const b=t.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    if(b)return b[1]+': '+b[2];
+    return t.replace(/^>\s+/,'').replace(/^-\s+/,'• ');
+  }).join('\n').replace(/\n{3,}/g,'\n\n');
+}
+/* tokens */
+const TOKENS={nome:'nome',primeiro_nome:'primeiro nome',empresa:'empresa',frente:'frente',email:'e-mail'};
+const BREVO_ATTR={nome:'NOME',primeiro_nome:'NOME',empresa:'EMPRESA',frente:'FRENTE',email:'EMAIL'};
+function valorToken(k,c){
+  if(!c)return '';
+  if(k==='primeiro_nome')return (c.nome||'').trim().split(/\s+/)[0]||'';
+  return c[k]||'';
+}
+function mesclar(txt,c){
+  return (txt||'').replace(/\{\{\s*([a-z_]+)\s*(?:\|([^}]*))?\}\}/g,(m,k,fb)=>{
+    const v=valorToken(k,c);
+    return v||(fb!=null?fb.trim():'');
+  });
+}
+function paraBrevo(txt){
+  return (txt||'').replace(/\{\{\s*([a-z_]+)\s*(?:\|([^}]*))?\}\}/g,(m,k,fb)=>{
+    const a=BREVO_ATTR[k];
+    if(!a)return fb!=null?fb.trim():'';
+    return fb!=null&&fb.trim() ? '{{ contact.'+a+' | default : "'+fb.trim()+'" }}' : '{{ contact.'+a+' }}';
+  });
+}
+function tokensUsados(txt){
+  const out=[]; const re=/\{\{\s*([a-z_]+)\s*(\|([^}]*))?\}\}/g; let m;
+  while((m=re.exec(txt||''))){ out.push({chave:m[1],fallback:m[3]!=null?m[3].trim():null}); }
+  return out;
+}
+/* email completo */
+function montarEmail(tpl,c,modo){
+  const cf=cfg(), T=tema();
+  const conv = modo==='brevo'? paraBrevo : (modo==='raw' ? (t=>t) : (t=>mesclar(t,c)));
+  const corpo = corpoParaHtml(conv(tpl.corpo),T);
+  const pre = conv(tpl.preheader||'');
+  const rod = rodapeTexto().split('\n').map(l=>l?esc2(l):'&nbsp;').join('<br>');
+  const marca = cf.logoUrl
+    ? '<img src="'+esc2(cf.logoUrl)+'" alt="'+esc2(cf.marcaTexto||'')+'" height="34" style="display:block;border:0;height:34px">'
+    : esc2(cf.marcaTexto||cf.fromNome||'R. Feitosa Group');
+  return '<table width="100%" cellpadding="0" cellspacing="0" style="background:'+T.corFundo+';padding:26px 0;font-family:Arial,Helvetica,sans-serif">\n'+
+  '<tr><td align="center">\n'+
+  '  <div style="display:none;max-height:0;overflow:hidden;opacity:0">'+esc2(pre)+'</div>\n'+
+  '  <table width="600" cellpadding="0" cellspacing="0" style="background:'+T.corCardBg+';border-radius:10px;overflow:hidden;max-width:600px">\n'+
+  '    <tr><td style="background:'+T.corHeaderBg+';padding:20px 26px;color:'+T.corHeaderTxt+';font-size:15px;font-weight:bold;letter-spacing:.5px">'+
+       marca+'</td></tr>\n'+
+  '    <tr><td style="padding:28px 26px">\n'+corpo+'    </td></tr>\n'+
+  '    <tr><td style="padding:18px 26px;background:'+T.corCardBg+';border-top:1px solid rgba(128,128,128,.25);font-size:11px;color:'+T.corRodapeTxt+';line-height:1.6">\n'+
+  '      '+rod+'\n    </td></tr>\n'+
+  '  </table>\n</td></tr></table>';
+}
+
+/* verificacao pre-envio */
+function gateChecks(tpl,c){
+  const r=[], assunto=mesclar(tpl.assunto||'',c), corpo=tpl.corpo||'';
+  const add=(nv,rot,txt)=>r.push({nv,rot,txt});
+  const la=assunto.length;
+  if(la>=25&&la<=60) add('ok','OK','Assunto com '+la+' caracteres — dentro da faixa que não é cortada no celular.');
+  else if(la<25) add('warn','ATENÇÃO','Assunto com '+la+' caracteres. Abaixo de 25 costuma parecer vago.');
+  else add('warn','ATENÇÃO','Assunto com '+la+' caracteres. Acima de 60 o celular corta o final.');
+
+  const caps=(assunto.match(/[A-ZÀ-Ú]/g)||[]).length/Math.max(1,assunto.replace(/\s/g,'').length);
+  if(caps>0.5||/!{2,}/.test(assunto)) add('bad','RISCO','Assunto com caixa alta ou pontuação excessiva — gatilho clássico de filtro de spam.');
+  else add('ok','OK','Assunto sem caixa alta nem excesso de pontuação.');
+
+  if((tpl.preheader||'').trim().length>=30) add('ok','OK','Preheader preenchido — ocupa o espaço que senão mostraria o começo do corpo.');
+  else add('warn','ATENÇÃO','Preheader curto ou vazio. É a segunda linha que o destinatário lê antes de abrir.');
+
+  const toks=tokensUsados(corpo+' '+(tpl.assunto||''));
+  if(toks.length) add('ok','OK',toks.length+' token(s) de personalização em uso.');
+  else add('warn','ATENÇÃO','Nenhuma personalização. E-mail sem nome tem abertura sistematicamente menor.');
+
+  const semFb=toks.filter(t=>!t.fallback);
+  if(semFb.length) add('bad','RISCO','Token sem fallback: '+semFb.map(t=>'{{'+t.chave+'}}').join(', ')+'. Contato sem esse dado recebe um buraco no texto.');
+  else if(toks.length) add('ok','OK','Todos os tokens têm fallback declarado.');
+
+  const desc=corpo.trim().replace(/\s+/g,' ').split(' ').length;
+  if(desc>=40) add('ok','OK','Corpo com cerca de '+desc+' palavras.');
+  else add('warn','ATENÇÃO','Corpo com cerca de '+desc+' palavras. Muito curto tende a parecer disparo automático.');
+
+  const links=(corpo.match(/\]\(/g)||[]).length;
+  if(links===0) add('warn','ATENÇÃO','Nenhum link ou botão. O e-mail não pede ação nenhuma.');
+  else if(links<=3) add('ok','OK',links+' link(s)/botão — quantidade saudável.');
+  else add('warn','ATENÇÃO',links+' links. Acima de três dilui a ação e chama atenção dos filtros.');
+
+  const cf=cfg();
+  if(cf.razao&&cf.cnpj&&cf.endereco) add('ok','OK','Rodapé legal completo: razão social, CNPJ e endereço.');
+  else add('bad','RISCO','Rodapé legal incompleto — falta razão social, CNPJ ou endereço na aba Configuração. Exigência de identificação do remetente.');
+
+  add('warn','PENDENTE','Link real de descadastro: a plataforma de envio precisa substituir o marcador [DESCADASTRAR] pelo link dela.');
+  return r;
+}
+
+function renderEditor(){
+  const lista=tplList();
+  if(!lista.length){ document.getElementById('gate').innerHTML='<div class="note">Nenhum template. Clique em "Novo template".</div>'; return; }
+  if(!tplAtual||!lista.some(t=>t._id===tplAtual)) tplAtual=lista[0]._id;
+  const tpl=tplGet();
+
+  const sel=document.getElementById('tplSel');
+  sel.innerHTML=lista.map(t=>'<option value="'+t._id+'"'+(t._id===tplAtual?' selected':'')+'>'+esc(t.nome||'(sem nome)')+'</option>').join('');
+  sel.onchange=()=>{ tplAtual=sel.value; renderEditor(); };
+
+  ['nome','assunto','preheader','corpo'].forEach(k=>{
+    const el=document.querySelector('[data-tpl="'+k+'"]');
+    if(el&&document.activeElement!==el) el.value=tpl[k]||'';
+  });
+
+  const contatos=(state.contatos||[]).filter(c=>c.email);
+  const ps=document.getElementById('prevSel');
+  ps.innerHTML='<option value="">— sem contato (mostra os fallbacks) —</option>'+
+    contatos.map(c=>'<option value="'+c._id+'"'+(c._id===prevContato?' selected':'')+'>'+esc((c.nome||c.email)+' · '+(c.empresa||''))+'</option>').join('');
+  ps.onchange=()=>{ prevContato=ps.value; renderEditor(); };
+  const c=contatos.find(x=>x._id===prevContato)||null;
+
+  const cf=cfg();
+  document.getElementById('prevFrom').textContent=(cf.fromNome||'R. Feitosa Group')+' <'+(cf.fromEmail||'—')+'>';
+  document.getElementById('prevSubj').textContent=mesclar(tpl.assunto||'',c)||'(sem assunto)';
+  document.getElementById('prevPre').textContent=mesclar(tpl.preheader||'',c);
+  document.getElementById('prevBody').innerHTML=montarEmail(tpl,c,'merged');
+  renderMarca();
+
+  const la=(mesclar(tpl.assunto||'',c)).length;
+  document.getElementById('assuntoHint').textContent=la+' caracteres · faixa ideal 25–60 · tokens disponíveis: '+Object.keys(TOKENS).map(k=>'{{'+k+'}}').join(', ');
+
+  document.getElementById('gate').innerHTML=gateChecks(tpl,c).map(g=>
+    '<div class="gate-item gate-'+g.nv+'"><b>'+g.rot+'</b><span>'+esc(g.txt)+'</span></div>').join('');
+}
+
+/* ---------- render: tabelas ---------- */
+let filtros={contatos:'',campanhas:''}, filtroFrente='';
+function th(arr){ return '<thead><tr>'+arr.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead>'; }
+
+function renderContatos(){
+  const f=filtros.contatos.toLowerCase();
+  const rows=(state.contatos||[]).map((r,i)=>{
+    const hit=(!f||((r.email||'')+' '+(r.nome||'')+' '+(r.empresa||'')).toLowerCase().includes(f))&&(!filtroFrente||r.frente===filtroFrente);
+    if(!hit)return '';
+    const p=r.status==='ativo'?'g':r.status==='descadastrado'?'n':'r';
+    return '<tr data-i="'+i+'">'+
+      '<td class="mono" style="text-align:center;color:var(--slate)">'+(i+1)+'</td>'+
+      '<td data-k="email">'+inp(r.email,'e-mail')+'</td>'+
+      '<td data-k="nome">'+inp(r.nome,'nome')+'</td>'+
+      '<td class="prose-cell" data-k="empresa">'+txta(r.empresa,'empresa')+'</td>'+
+      '<td data-k="frente">'+optSel(r.frente,FRENTES)+'</td>'+
+      '<td class="prose-cell" data-k="origem">'+txta(r.origem,'de onde veio')+'</td>'+
+      '<td data-k="baseLegal">'+optSel(r.baseLegal,BASES)+'</td>'+
+      '<td data-k="dataConsent">'+inp(r.dataConsent,'AAAA-MM-DD')+'</td>'+
+      '<td class="prose-cell" data-k="evidencia">'+txta(r.evidencia,'evidência do consentimento')+'</td>'+
+      '<td data-k="status">'+optSel(r.status,STATUS_C)+'</td>'+
+      '<td><span class="pill '+p+'">'+esc(r.status||'—')+'</span></td>'+
+      '<td><button class="del" onclick="App.delRow(\'contatos\','+i+')" title="Remover">×</button></td></tr>';
+  }).join('');
+  const k=compute();
+  document.getElementById('tblContatos').innerHTML=
+    th(['#','E-mail','Nome','Empresa','Frente','Origem','Base legal','Data consent.','Evidência','Status','','']) +
+    '<tbody>'+rows+'</tbody>'+
+    '<tfoot><tr><td colspan="4">TOTAL NA BASE: '+fint(k.C.length)+'</td><td colspan="4">DISPARÁVEIS: '+fint(k.ativos.length)+'</td><td colspan="4">SEM BASE LEGAL: '+fint(k.semBase.length)+'</td></tr></tfoot>';
+  requestAnimationFrame(()=>growAll(document.getElementById('tblContatos')));
+}
+
+function renderCampanhas(){
+  const f=filtros.campanhas.toLowerCase();
+  let te=0,tg=0,ta=0,tc=0;
+  const rows=(state.campanhas||[]).map((r,i)=>{
+    const hit=!f||((r.nome||'')+' '+(r.frente||'')+' '+(r.assunto||'')).toLowerCase().includes(f);
+    const env=pnum(r.enviados),ent=pnum(r.entregues);
+    te+=env;tg+=ent;ta+=pnum(r.aberturas);tc+=pnum(r.cliques);
+    if(!hit)return '';
+    const p=r.status==='Enviada'?'g':r.status==='Pausada'||r.status==='Cancelada'?'r':'a';
+    return '<tr data-i="'+i+'">'+
+      '<td class="mono" style="text-align:center;color:var(--slate)">'+(i+1)+'</td>'+
+      '<td data-k="data">'+inp(r.data,'AAAA-MM-DD')+'</td>'+
+      '<td data-k="frente">'+optSel(r.frente,FRENTES)+'</td>'+
+      '<td class="prose-cell" data-k="nome">'+txta(r.nome,'nome da campanha')+'</td>'+
+      '<td class="prose-cell" data-k="assunto">'+txta(r.assunto,'linha de assunto')+'</td>'+
+      '<td data-k="status">'+optSel(r.status,STATUS_K)+'</td>'+
+      '<td><span class="pill '+p+'">'+esc(r.status||'—')+'</span></td>'+
+      '<td data-k="enviados">'+inti(r.enviados)+'</td>'+
+      '<td data-k="entregues">'+inti(r.entregues)+'</td>'+
+      '<td data-k="aberturas">'+inti(r.aberturas)+'</td>'+
+      '<td data-k="cliques">'+inti(r.cliques)+'</td>'+
+      '<td data-k="bounces">'+inti(r.bounces)+'</td>'+
+      '<td data-k="reclamacoes">'+inti(r.reclamacoes)+'</td>'+
+      '<td data-k="descadastros">'+inti(r.descadastros)+'</td>'+
+      '<td class="calc">'+(env?pct(div(ent,env)):'—')+'</td>'+
+      '<td class="calc">'+(ent?pct(div(pnum(r.aberturas),ent)):'—')+'</td>'+
+      '<td class="calc">'+(ent?pct(div(pnum(r.cliques),ent)):'—')+'</td>'+
+      '<td><button class="del" onclick="App.delRow(\'campanhas\','+i+')" title="Remover">×</button></td></tr>';
+  }).join('');
+  document.getElementById('tblCampanhas').innerHTML=
+    th(['#','Data','Frente','Campanha','Assunto','Status','','Enviados','Entregues','Aberturas','Cliques','Bounces','Reclam.','Descad.','Entrega','Abertura','CTR',''])+
+    '<tbody>'+rows+'</tbody>'+
+    '<tfoot><tr><td colspan="7">TOTAL</td><td style="text-align:right">'+fint(te)+'</td><td style="text-align:right">'+fint(tg)+'</td><td style="text-align:right">'+fint(ta)+'</td><td style="text-align:right">'+fint(tc)+'</td><td colspan="3"></td>'+
+    '<td style="text-align:right">'+pct(div(tg,te))+'</td><td style="text-align:right">'+pct(div(ta,tg))+'</td><td style="text-align:right">'+pct(div(tc,tg))+'</td><td></td></tr></tfoot>';
+  requestAnimationFrame(()=>growAll(document.getElementById('tblCampanhas')));
+}
+
+function renderWarmup(){
+  let acc=0;
+  const rows=(state.warmup||[]).map((r,i)=>{
+    acc+=pnum(r.enviados);
+    const excedeu=pnum(r.enviados)>pnum(r.limite);
+    return '<tr data-i="'+i+'">'+
+      '<td class="mono" style="text-align:center;font-weight:700">'+r.dia+'</td>'+
+      '<td data-k="data">'+inp(r.data,'AAAA-MM-DD')+'</td>'+
+      '<td data-k="limite">'+inti(r.limite)+'</td>'+
+      '<td data-k="enviados">'+inti(r.enviados)+'</td>'+
+      '<td class="calc">'+fint(acc)+'</td>'+
+      '<td>'+(excedeu?'<span class="pill r">acima do limite</span>':(pnum(r.enviados)?'<span class="pill g">dentro</span>':'<span class="pill n">—</span>'))+'</td>'+
+      '<td class="prose-cell" data-k="obs">'+txta(r.obs,'incidentes, bounces observados, ajustes')+'</td></tr>';
+  }).join('');
+  document.getElementById('tblWarmup').innerHTML=
+    th(['Dia','Data prevista','Limite diário','Enviados de fato','Acumulado','Aderência','Observação / incidentes'])+
+    '<tbody>'+rows+'</tbody>'+
+    '<tfoot><tr><td colspan="4">ACUMULADO DA RAMPA</td><td style="text-align:right">'+fint(acc)+'</td><td colspan="2"></td></tr></tfoot>';
+  requestAnimationFrame(()=>growAll(document.getElementById('tblWarmup')));
+}
+
+function renderChecklist(){
+  const rows=(state.checklist||[]).map((r,i)=>{
+    const p=r.status==='Concluído'?'g':r.status==='Em andamento'?'a':'n';
+    return '<tr data-i="'+i+'">'+
+      '<td class="mono" style="text-align:center;font-weight:700;color:var(--gold-d)">'+esc(r.onda)+'</td>'+
+      '<td class="mono" style="white-space:nowrap">'+esc(r.prazo)+'</td>'+
+      '<td class="prose-cell" data-k="tarefa">'+txta(r.tarefa)+'</td>'+
+      '<td data-k="resp">'+inp(r.resp,'responsável')+'</td>'+
+      '<td data-k="status">'+optSel(r.status,STATUS_CHK)+'</td>'+
+      '<td><span class="pill '+p+'">'+esc(r.status)+'</span></td></tr>';
+  }).join('');
+  document.getElementById('tblChecklist').innerHTML=
+    th(['Onda','Prazo','Tarefa','Responsável','Status',''])+'<tbody>'+rows+'</tbody>';
+  const k=compute(), tot=(state.checklist||[]).length;
+  document.getElementById('chkNote').innerHTML='<b>Progresso da implantação: '+k.chkOk+' de '+tot+' concluídas.</b> '+
+    'Nenhum disparo real acontece antes das ondas O0 a O3 estarem fechadas — em especial a publicação de SPF/DKIM/DMARC e a higienização da base.';
+  requestAnimationFrame(()=>growAll(document.getElementById('tblChecklist')));
+}
+
+function renderRiscos(){
+  const rows=(state.riscos||[]).map((r,i)=>{
+    const imp=r.impacto==='Crítico'?'r':r.impacto==='Alto'?'a':'n';
+    return '<tr data-i="'+i+'">'+
+      '<td class="mono" style="text-align:center;color:var(--slate)">'+(i+1)+'</td>'+
+      '<td class="prose-cell" data-k="risco">'+txta(r.risco)+'</td>'+
+      '<td data-k="prob">'+optSel(r.prob,['Baixa','Média','Alta'])+'</td>'+
+      '<td><span class="pill '+imp+'">'+esc(r.impacto)+'</span></td>'+
+      '<td class="prose-cell" data-k="mitig">'+txta(r.mitig)+'</td>'+
+      '<td data-k="resp">'+inp(r.resp,'responsável')+'</td>'+
+      '<td data-k="status">'+optSel(r.status,['Aberto','Mitigado','Aceito'])+'</td></tr>';
+  }).join('');
+  document.getElementById('tblRiscos').innerHTML=
+    th(['#','Risco','Prob.','Impacto','Mitigação','Responsável','Status'])+'<tbody>'+rows+'</tbody>';
+  requestAnimationFrame(()=>growAll(document.getElementById('tblRiscos')));
+}
+
+/* ---------- App ---------- */
+const NEWROW={
+  contatos:()=>({_id:uid(),email:'',nome:'',empresa:'',frente:'Relacionamento',origem:'',baseLegal:'',dataConsent:'',evidencia:'',status:'ativo'}),
+  campanhas:()=>({_id:uid(),data:'',frente:'Relacionamento',nome:'',assunto:'',status:'Planejada',enviados:0,entregues:0,aberturas:0,cliques:0,bounces:0,reclamacoes:0,descadastros:0})
+};
+const App={
+  renderAll(){
+    renderDashboard(); renderConfig(); renderContatos(); renderCampanhas();
+    renderWarmup(); renderEditor(); renderChecklist(); renderRiscos();
+    document.getElementById('verTxt').textContent=(state.meta&&state.meta.versao)||'—';
+    document.querySelectorAll('.tab[data-cnt]').forEach(t=>{
+      const c=(state[t.dataset.cnt]||[]).length; const s=t.querySelector('.cnt'); if(s)s.textContent=c;
+    });
+  },
+  save:debounce(async function(manual){
+    if(SHARED&&storageOk){ const remote=await Store.get(KEY);
+      if(remote&&remote!==lastSnapshot){ state=applyOps(stampIds(JSON.parse(remote))); if(!isTyping())App.renderAll(); } }
+    state.meta=state.meta||{}; state.meta.updatedAt=new Date().toISOString(); state.meta.versao=new Date().toLocaleDateString('pt-BR');
+    const payload=JSON.stringify(state); const ok=await Store.set(KEY,payload);
+    if(ok){ lastSnapshot=payload; ops=[]; }
+    if(manual)App.toast(ok?'Salvo para toda a equipe':'Salvo só neste navegador');
+    App.saveNote();
+  },800),
+  saveNote(){ const el=document.getElementById('saveNote'); if(!el)return;
+    el.innerHTML=storageOk
+      ?'<b style="color:var(--gold)">● Modo compartilhado</b> — a equipe edita os mesmos dados.'
+      :(localOk?'<b style="color:var(--gold)">● Salvo neste navegador</b> — os dados persistem aqui; use "Exportar" para levar a outro dispositivo.'
+              :'<b style="color:var(--red-ink)">● Apenas nesta sessão</b> — nada será salvo ao fechar. Exporte antes de sair.'); },
+  toast(m){ const t=document.getElementById('toast'); document.getElementById('toastMsg').textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); },
+  addRow(coll){ const row=NEWROW[coll](); state[coll].push(row); op({t:'add',coll,row}); this.renderAll(); this.save(); },
+  delRow(coll,i){ const row=state[coll][i]; if(!row)return; op({t:'del',coll,id:row._id}); state[coll].splice(i,1); this.renderAll(); this.save(); },
+  filter(coll,v){ filtros[coll]=v; if(coll==='contatos')renderContatos(); else renderCampanhas(); },
+  filterFrente(v){ filtroFrente=v; renderContatos(); },
+  exportCSV(){
+    const ativos=(state.contatos||[]).filter(c=>c.status==='ativo'&&c.baseLegal&&c.email);
+    const bloq=(state.contatos||[]).filter(c=>c.status==='ativo'&&!c.baseLegal).length;
+    const head='EMAIL;NOME;EMPRESA;FRENTE;ORIGEM;BASE_LEGAL';
+    const body=ativos.map(c=>[c.email,c.nome,c.empresa,c.frente,c.origem,c.baseLegal].map(v=>('"'+(v||'').replace(/"/g,'""')+'"')).join(';')).join('\n');
+    const csv=head+'\n'+body;
+    Modal.open('Exportar base para a plataforma',
+      '<p>'+ativos.length+' contato(s) prontos para importação.'+(bloq?' <b style="color:#C0392B">'+bloq+' contato(s) foram bloqueados por falta de base legal declarada.</b>':'')+'</p>'+
+      '<p>Separador ponto-e-vírgula, com cabeçalho. Confira o mapeamento de colunas no importador da plataforma antes de confirmar.</p>'+
+      '<textarea id="csvTa" readonly>'+esc(csv)+'</textarea>',
+      [{label:'Fechar',cls:'ghost',on:()=>Modal.close()},
+       {label:'Baixar .csv',on:()=>tryDownload(csv,'rfast-contatos.csv','text/csv')},
+       {label:'Copiar',cls:'primary',on:()=>copyText(document.getElementById('csvTa'))}]);
+    setTimeout(()=>{const t=document.getElementById('csvTa'); if(t){t.focus();t.select();}},60);
+  },
+  importCSV(){
+    Modal.open('Importar contatos (CSV ou colado da planilha)',
+      '<p>Uma linha por contato. Colunas, nesta ordem: <b>e-mail; nome; empresa; frente; origem; base legal</b>. Aceita ponto-e-vírgula, vírgula ou tabulação. A primeira linha é ignorada se contiver "email" ou "e-mail".</p>'+
+      '<p>Base legal aceita: <span class="mono">consentimento</span>, <span class="mono">legitimo_interesse</span>, <span class="mono">execucao_contrato</span>. Em branco, o contato entra bloqueado até você declarar.</p>'+
+      '<textarea id="impCsv" placeholder="joao@empresa.com.br;João Silva;Empresa Ltda;Relacionamento;Carteira do escritório;legitimo_interesse"></textarea>',
+      [{label:'Fechar',cls:'ghost',on:()=>Modal.close()},
+       {label:'Importar',cls:'primary',on:()=>{const v=document.getElementById('impCsv').value;Modal.close();App.doImportCSV(v);}}]);
+  },
+  doImportCSV(txt){
+    if(!txt||!txt.trim())return this.toast('Nada para importar');
+    const linhas=txt.split(/\r?\n/).filter(l=>l.trim());
+    let add=0, dup=0, inval=0;
+    const existentes=new Set((state.contatos||[]).map(c=>(c.email||'').toLowerCase().trim()));
+    linhas.forEach((l,idx)=>{
+      if(idx===0&&/e-?mail/i.test(l)&&!/@/.test(l))return;
+      const sep=l.indexOf(';')>=0?';':(l.indexOf('\t')>=0?'\t':',');
+      const p=l.split(sep).map(s=>s.trim().replace(/^"|"$/g,''));
+      const email=(p[0]||'').toLowerCase();
+      if(!email||email.indexOf('@')<1){ inval++; return; }
+      if(existentes.has(email)){ dup++; return; }
+      existentes.add(email);
+      const bl=(p[5]||'').toLowerCase();
+      const row={_id:uid(),email:email,nome:p[1]||'',empresa:p[2]||'',
+        frente:FRENTES.indexOf(p[3])>=0?p[3]:'Relacionamento',origem:p[4]||'Importação CSV',
+        baseLegal:BASES.indexOf(bl)>0?bl:'',dataConsent:'',evidencia:'',status:'ativo'};
+      state.contatos.push(row); op({t:'add',coll:'contatos',row}); add++;
+    });
+    this.renderAll(); this.save(true);
+    this.toast(add+' importado(s) · '+dup+' duplicado(s) ignorado(s) · '+inval+' inválido(s)');
+  },
+  addTemplate(){
+    const row={_id:uid(),nome:'Novo template',frente:'Relacionamento',
+      assunto:'{{primeiro_nome|Olá}}, ',preheader:'',
+      corpo:'# {{primeiro_nome|Olá}}\n\nEscreva aqui.\n\n[Botão](https://connectvaley.com.br)'};
+    state.templates.push(row); op({t:'add',coll:'templates',row}); tplAtual=row._id;
+    this.renderAll(); this.save(); this.toast('Template criado');
+  },
+  async delTemplate(){
+    const tpl=tplGet(); if(!tpl)return;
+    if((state.templates||[]).length<=1) return this.toast('Mantenha ao menos um template');
+    const ok=await askConfirm('Excluir template','Excluir "'+esc(tpl.nome||'')+'" para toda a equipe?'); if(!ok)return;
+    op({t:'del',coll:'templates',id:tpl._id});
+    state.templates=state.templates.filter(t=>t._id!==tpl._id);
+    tplAtual=null; this.renderAll(); this.save(true); this.toast('Template excluído');
+  },
+  exportTpl(modo){
+    const tpl=tplGet(); if(!tpl)return;
+    const c=(state.contatos||[]).find(x=>x._id===prevContato)||null;
+    let titulo,corpo,nota;
+    if(modo==='texto'){
+      titulo='Versão texto (plain-text)';
+      corpo='Assunto: '+mesclar(tpl.assunto||'',c)+'\n\n'+corpoParaTexto(mesclar(tpl.corpo||'',c))+'\n\n'+rodapeTexto();
+      nota='Toda campanha deve ter versão texto além do HTML. Cole no campo correspondente da plataforma.';
+    } else if(modo==='brevo'){
+      titulo='HTML com tokens da plataforma';
+      corpo=montarEmail(tpl,null,'brevo');
+      nota='Os tokens viram atributos de contato da plataforma. Confira que os atributos NOME, EMPRESA, FRENTE e EMAIL existem lá com esses nomes exatos, senão a substituição sai vazia. Assunto: <span class="mono">'+esc(paraBrevo(tpl.assunto||''))+'</span>';
+    } else {
+      titulo='HTML mesclado'+(c?' — '+esc(c.email):' (fallbacks)');
+      corpo=montarEmail(tpl,c,'merged');
+      nota='Já com os dados substituídos. Serve para teste ou envio individual, não para disparo em massa.';
+    }
+    Modal.open(titulo,'<p>'+nota+'</p><textarea id="expTpl" readonly>'+esc(corpo)+'</textarea>',
+      [{label:'Fechar',cls:'ghost',on:()=>Modal.close()},
+       {label:'Baixar arquivo',on:()=>tryDownload(corpo,(tpl.nome||'email').replace(/[^a-z0-9]+/gi,'-').toLowerCase()+(modo==='texto'?'.txt':'.html'),modo==='texto'?'text/plain':'text/html')},
+       {label:'Copiar',cls:'primary',on:()=>copyText(document.getElementById('expTpl'))}]);
+    setTimeout(()=>{const t=document.getElementById('expTpl'); if(t){t.focus();t.select();}},60);
+  },
+  dispararPrompt(){
+    const tpl=tplGet(); if(!tpl)return;
+    const cf=cfg();
+    const faltas=[];
+    if(!cf.fromEmail) faltas.push('e-mail remetente (aba Configuração)');
+    if(!cf.razao||!cf.cnpj||!cf.endereco) faltas.push('rodapé legal completo (aba Configuração)');
+    const alvo=(state.contatos||[]).filter(c=>c.status==='ativo'&&c.baseLegal&&c.email&&(!tpl.frente||c.frente===tpl.frente));
+    const corpo=
+      '<p><b>Template:</b> '+esc(tpl.nome||'')+'<br>'+
+      '<b>Frente:</b> '+esc(tpl.frente||'(todas)')+'<br>'+
+      '<b>Remetente:</b> '+esc(cf.fromNome||'')+' &lt;'+esc(cf.fromEmail||'—')+'&gt;<br>'+
+      '<b>Assunto:</b> '+esc(tpl.assunto||'')+'</p>'+
+      (faltas.length?'<p style="color:#C0392B"><b>Pendências:</b> '+esc(faltas.join('; '))+'. Resolva antes de disparar.</p>':'')+
+      '<p>O disparo é autorizado pelo servidor — nenhuma chave passa pelo seu navegador. '+
+      'A fila é montada no servidor, com os contatos ativos e com base legal da frente. '+
+      'Sua base local tem <b>'+alvo.length+'</b> contato(s) nesse critério — o servidor usa a base dele, que pode diferir.</p>'+
+      '<div id="dispLog" style="font-family:JetBrains Mono,monospace;font-size:11.5px;white-space:pre-wrap;max-height:180px;overflow:auto"></div>';
+    Modal.open('Disparar campanha',corpo,[
+      {label:'Cancelar',cls:'ghost',on:()=>Modal.close()},
+      {label:'Disparar agora',cls:'primary',on:()=>App.dispararExec()}
+    ]);
+  },
+  async dispararExec(){
+    const log=document.getElementById('dispLog');
+    const put=m=>{ if(log)log.textContent+=m+'\n'; };
+    const tpl=tplGet(), cf=cfg(); if(!tpl)return;
+    const chamar=async(payload)=>{
+      const r=await fetch('/api/disparar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const t=await r.text(); let j; try{ j=JSON.parse(t); }catch(e){ j={erro:t.slice(0,200)}; }
+      return {ok:r.ok,status:r.status,j};
+    };
+    try{
+      put('Criando campanha…');
+      const c1=await chamar({acao:'criar',campanha:{
+        nome:tpl.nome||'Campanha', frente:tpl.frente||null,
+        assunto:tpl.assunto||'', preheader:tpl.preheader||'',
+        from_nome:cf.fromNome||'R. Feitosa Group', from_email:cf.fromEmail||'',
+        reply_to:cf.replyTo||null,
+        html:montarEmail(tpl,null,'raw'),
+        texto:corpoParaTexto(tpl.corpo||'')+'\n\n'+rodapeTexto()
+      }});
+      if(!c1.ok){ put('Falhou ('+c1.status+'): '+(c1.j.erro||'')); return; }
+      const id=c1.j.campanha_id;
+      put('Campanha '+id+' · '+c1.j.total+' destinatário(s) na fila.');
+      if(!c1.j.total){ put('Nada a enviar.'); return; }
+      let voltas=0;
+      while(voltas<20){
+        voltas++;
+        put('Enviando lote '+voltas+'…');
+        const c2=await chamar({acao:'enviar',campanha_id:id});
+        if(c2.j.pausada){ put('PAUSADA: '+c2.j.motivo); break; }
+        if(!c2.ok){ put('Falhou ('+c2.status+'): '+(c2.j.erro||'')); break; }
+        put('  enviados '+c2.j.enviados_neste_lote+' · falhas '+c2.j.falhas+' · suprimidos '+c2.j.suprimidos+' · restam '+c2.j.restam);
+        if(!c2.j.restam) { put('Concluída.'); break; }
+      }
+    }catch(e){ put('Erro de rede: '+e); }
+  },
+  exportJSON(){ const json=JSON.stringify(state,null,2);
+    Modal.open('Exportar dados — backup da plataforma',
+      '<p>O download pode ser bloqueado no ambiente publicado. Se nada baixar, use <b>Copiar JSON</b> e cole num arquivo <code>.json</code>.</p><textarea id="expTa" readonly>'+esc(json)+'</textarea>',
+      [{label:'Fechar',cls:'ghost',on:()=>Modal.close()},{label:'Baixar arquivo',on:()=>tryDownload(json,'rfast-mail-backup.json','application/json')},{label:'Copiar JSON',cls:'primary',on:()=>copyText(document.getElementById('expTa'))}]);
+    setTimeout(()=>{const t=document.getElementById('expTa'); if(t){t.focus();t.select();}},60); },
+  importPrompt(){ Modal.open('Importar dados',
+      '<p>Cole o JSON de backup. Isto <b>substitui os dados de toda a equipe</b>.</p><textarea id="impTa" placeholder="Cole aqui o JSON…"></textarea>',
+      [{label:'Fechar',cls:'ghost',on:()=>Modal.close()},{label:'Importar',cls:'primary',on:()=>{const v=document.getElementById('impTa').value;Modal.close();App.loadJSON(v);}}]); },
+  async loadJSON(txt){ let d; try{ d=JSON.parse(txt); if(!d)throw 0; }catch(e){ return this.toast('JSON inválido'); }
+    const ok=await askConfirm('Importar dados','Isto substitui os dados de toda a equipe. Continuar?'); if(!ok)return;
+    ops=[]; state=stampIds(d); lastSnapshot=''; this.renderAll(); this.save(true); this.toast('Importado'); },
+  async reset(){ const ok=await askConfirm('Restaurar dados originais','Apaga as edições de toda a equipe. Exporte um backup antes. Continuar?'); if(!ok)return;
+    ops=[]; state=stampIds(JSON.parse(JSON.stringify(SEED))); lastSnapshot=''; this.renderAll(); this.save(true); this.toast('Restaurado'); }
+};
+
+/* ---------- edição inline ---------- */
+document.addEventListener('input',e=>{
+  const tplEl=e.target.closest('[data-tpl]');
+  if(tplEl){
+    const tpl=tplGet(); if(!tpl)return;
+    const key=tplEl.dataset.tpl, v=tplEl.value;
+    tpl[key]=v; op({t:'set',coll:'templates',id:tpl._id,key,val:v});
+    renderEditor(); App.save(); return;
+  }
+  const cfgEl=e.target.closest('[data-cfg]');
+  if(cfgEl){
+    const key=cfgEl.dataset.cfg, v=cfgEl.value, row=cfg();
+    row[key]=v; op({t:'set',coll:'config',id:row._id,key,val:v});
+    if(/^(cor|marca|logo)/.test(key)){ renderEditor(); App.save(); return; }
+    if(['dominio','subRel','subProsp','subEvt','dmarcRua','razao','cnpj','endereco','replyTo','fromNome'].indexOf(key)>=0){
+      renderDnsSoft(); renderEditor(); renderDashboard();
+    }
+    App.save(); return;
+  }
+  const cell=e.target.closest('td[data-k]');
+  if(cell&&e.target.matches('[data-f]')){
+    if(e.target.matches('textarea.prose'))autogrow(e.target);
+    const tr=cell.closest('tr[data-i]'); if(!tr)return;
+    const tbl=cell.closest('table'); if(!tbl)return;
+    const coll=tbl.dataset.coll; if(!coll)return;
+    const i=+tr.dataset.i, key=cell.dataset.k, isNum=e.target.hasAttribute('data-num');
+    const v=isNum?pnum(e.target.value):e.target.value;
+    const row=state[coll][i]; if(!row)return;
+    row[key]=v; op({t:'set',coll,id:row._id,key,val:v});
+    if(coll==='campanhas'||coll==='contatos'||coll==='checklist')renderDashboard();
+    App.save();
+  }
+});
+/* mudanças em <select> não disparam 'input' em todos os navegadores antigos — garantia extra */
+document.addEventListener('change',e=>{
+  if(e.target.matches('select[data-f]')) e.target.dispatchEvent(new Event('input',{bubbles:true}));
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')Modal.close(); });
+
+function renderDnsSoft(){
+  const c=cfg();
+  const subs=[['Relacionamento',c.subRel],['Prospecção',c.subProsp],['Eventos',c.subEvt]].filter(s=>s[1]);
+  let body='';
+  if(!subs.length){ body='<tr><td colspan="5" style="padding:14px;color:var(--slate);font-size:12.5px">Defina ao menos um subdomínio acima para gerar os registros.</td></tr>'; }
+  else subs.forEach(([rot,sub])=>{
+    const rua=c.dmarcRua?('; rua=mailto:'+c.dmarcRua):'';
+    body+=linhaDns(rot,'TXT (código de verificação)',sub,'[código gerado pela plataforma ao adicionar o domínio]','Prova que o domínio é seu — primeiro registro a publicar');
+    body+=linhaDns(rot,'TXT/CNAME (DKIM)','[seletor]._domainkey.'+sub,'[chave gerada pela plataforma]','Assina cada mensagem. É o que sustenta o DMARC — sem isso o Gmail rebaixa o envio');
+    body+=linhaDns(rot,'TXT (DMARC)','_dmarc.'+sub,'v=DMARC1; p=none'+rua+'; fo=1','Começa em p=none para coletar relatórios; migrar a p=quarantine em D+30');
+    body+=linhaDns(rot,'TXT (SPF) — opcional','(raiz do domínio)','v=spf1 include:spf.brevo.com ~all','Na Brevo, SPF e MX só são exigidos em IP dedicado. Confirme o valor no painel antes de publicar');
+  });
+  document.getElementById('tblDns').innerHTML=
+    '<thead><tr><th>Frente</th><th>Tipo</th><th>Host / Nome</th><th>Valor</th><th>Função</th></tr></thead><tbody>'+body+'</tbody>';
+  document.getElementById('rodapeTa').value=rodapeTexto();
+}
+
+/* ---------- tabs ---------- */
+const TABS=[['dashboard','Dashboard',null],['config','Configuração & DNS',null],['contatos','Contatos','contatos'],
+  ['campanhas','Campanhas','campanhas'],['warmup','Warm-up',null],['editor','Editor de e-mail','templates'],
+  ['checklist','Implantação','checklist'],['riscos','Riscos','riscos']];
+document.getElementById('tabs').innerHTML=TABS.map((t,i)=>
+  '<button class="tab '+(i===0?'active':'')+'" data-go="'+t[0]+'"'+(t[2]?' data-cnt="'+t[2]+'"':'')+'>'+t[1]+(t[2]?' <span class="cnt">0</span>':'')+'</button>').join('');
+document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); tab.classList.add('active');
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.dataset.view===tab.dataset.go));
+  requestAnimationFrame(()=>growAll(document.querySelector('.view.active')));
+}));
+
+/* ---------- boot ---------- */
+(async function(){
+  const saved=await Store.get(KEY);
+  state = saved? applyOps(stampIds(JSON.parse(saved))) : stampIds(JSON.parse(JSON.stringify(SEED)));
+  if(saved)lastSnapshot=saved;
+  if(!state.config||!state.config.length)state.config=JSON.parse(JSON.stringify(SEED.config));
+  App.renderAll(); App.saveNote();
+  if(SHARED&&storageOk)setInterval(()=>syncFromShared(false),15000);
+})();
+</script>
+</body>
+</html>
