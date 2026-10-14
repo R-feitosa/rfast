@@ -377,7 +377,8 @@ const SEED = {
     dominio:'connectvaley.com.br', subRel:'connectvaley.com.br', subProsp:'', subEvt:'',
     plataforma:'Brevo', plano:'Free (300/dia) ou Starter', fromNome:'Roneely Feitosa | Connect Valley',
     fromEmail:'contato@connectvaley.com.br', replyTo:'contato@connectvaley.com.br',
-    razao:'Razão Social Teste Ltda (PROVISÓRIO)', cnpj:'00.000.000/0001-00', endereco:'Rua Teste, 100 — Centro, Sobral/CE, CEP 62000-000 (PROVISÓRIO)', responsavel:'Roneely', dmarcRua:'contato@connectvaley.com.br',
+    razao:'Connect Valley LTDA', cnpj:'54.941.297/0001-19', endereco:'Sobral/CE (PROVISÓRIO — completar com logradouro, número, bairro e CEP)', responsavel:'Roneely', dmarcRua:'contato@connectvaley.com.br',
+    motivoContato:'se inscreveu no Connect Valley 2026 e autorizou o recebimento de e-mails do evento',
     marcaTexto:'Roneely Feitosa | Connect Valley', logoUrl:'',
     corFundo:'#F4F5F8', corHeaderBg:'#1A1A2E', corHeaderTxt:'#C9A84C', corCardBg:'#FFFFFF',
     corTitulo:'#1A1A2E', corTexto:'#33384A', corBotaoBg:'#C9A84C', corBotaoTxt:'#1A1A2E',
@@ -643,12 +644,13 @@ const CFG_FIELDS=[
   ['razao','Razão social','','Obrigatória no rodapé legal.'],
   ['cnpj','CNPJ','','Obrigatório no rodapé legal.'],
   ['endereco','Endereço completo','','Obrigatório no rodapé legal.'],
+  ['motivoContato','Motivo do contato (rodapé)','ex.: se inscreveu no Connect Valley 2026 e autorizou o recebimento de e-mails do evento','Completa a frase "Você recebeu esta mensagem porque…". A LGPD exige dizer de onde veio o contato — e o motivo muda conforme a base: participante de evento, cliente do escritório, quem baixou material.'],
   ['responsavel','Responsável pela operação','','Quem aperta o botão de disparo.']
 ];
 function renderConfig(){
   const c=cfg();
   document.getElementById('cfgGrid').innerHTML=CFG_FIELDS.map(f=>
-    '<div class="fld'+(f[0]==='endereco'?' full':'')+'"><label>'+esc(f[1])+'</label>'+
+    '<div class="fld'+(f[0]==='endereco'||f[0]==='motivoContato'?' full':'')+'"><label>'+esc(f[1])+'</label>'+
     '<input data-cfg="'+f[0]+'" value="'+esc(c[f[0]]||'')+'" placeholder="'+esc(f[2])+'">'+
     '<div class="hint">'+esc(f[3])+'</div></div>').join('');
   const subs=[['Relacionamento',c.subRel],['Prospecção',c.subProsp],['Eventos',c.subEvt]].filter(s=>s[1]);
@@ -679,7 +681,7 @@ function rodapeTexto(){
     (c.razao||'[RAZÃO SOCIAL]')+' — CNPJ '+(c.cnpj||'[CNPJ]'),
     (c.endereco||'[ENDEREÇO COMPLETO]'),
     '',
-    'Você recebeu esta mensagem porque [motivo do contato: é cliente do escritório / inscreveu-se no Connect Valley / solicitou nosso material].',
+    'Você recebeu esta mensagem porque '+(c.motivoContato||'[preencha o motivo do contato na aba Configuração]')+'.',
     'Não desejamos ocupar sua caixa sem utilidade: para deixar de receber, clique em [DESCADASTRAR] — o pedido é atendido imediatamente.',
     'Dúvidas sobre seus dados pessoais? Escreva para '+(c.replyTo||'[e-mail de contato]')+'.',
     '',
@@ -1264,7 +1266,7 @@ document.addEventListener('input',e=>{
     const key=cfgEl.dataset.cfg, v=cfgEl.value, row=cfg();
     row[key]=v; op({t:'set',coll:'config',id:row._id,key,val:v});
     if(/^(cor|marca|logo)/.test(key)){ renderEditor(); App.save(); return; }
-    if(['dominio','subRel','subProsp','subEvt','dmarcRua','razao','cnpj','endereco','replyTo','fromNome'].indexOf(key)>=0){
+    if(['dominio','subRel','subProsp','subEvt','dmarcRua','razao','cnpj','endereco','motivoContato','replyTo','fromNome'].indexOf(key)>=0){
       renderDnsSoft(); renderEditor(); renderDashboard();
     }
     App.save(); return;
@@ -1324,6 +1326,9 @@ document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>
   state = saved? applyOps(stampIds(JSON.parse(saved))) : stampIds(JSON.parse(JSON.stringify(SEED)));
   if(saved)lastSnapshot=saved;
   if(!state.config||!state.config.length)state.config=JSON.parse(JSON.stringify(SEED.config));
+  // campos de configuração criados depois que a equipe já salvou dados: herdam o padrão do SEED.
+  // Só preenche o que não existe — o que foi digitado continua intacto.
+  Object.entries(SEED.config[0]).forEach(([k,v])=>{ if(state.config[0][k]===undefined)state.config[0][k]=v; });
   App.renderAll(); App.saveNote();
   if(SHARED&&storageOk)setInterval(()=>syncFromShared(false),15000);
 })();
