@@ -424,7 +424,11 @@ const SEED = {
     {_id:'t3',nome:'Primeiro contato — B2B',frente:'Prospecção',
      assunto:'{{empresa|Sua empresa}} — [observação específica]',
      preheader:'Contato transparente: digo de onde vim logo na primeira linha.',
-     corpo:'# {{primeiro_nome|Bom dia}}\n\nSou [seu nome], do R. Feitosa Group. Cheguei até você por [origem real e verificável]. Registro isso logo de início, por transparência.\n\nUma observação específica sobre a {{empresa|sua empresa}} — não sobre o escritório. Se não houver observação específica, não envie este e-mail.\n\n## O que eu proponho\n\nEm 15 minutos consigo mostrar [resultado concreto que outro cliente do mesmo porte obteve].\n\n[Ver agenda de 15 minutos](https://connectvaley.com.br)\n\nSe não fizer sentido, responda apenas "não" — não insistirei.'}
+     corpo:'# {{primeiro_nome|Bom dia}}\n\nSou [seu nome], do R. Feitosa Group. Cheguei até você por [origem real e verificável]. Registro isso logo de início, por transparência.\n\nUma observação específica sobre a {{empresa|sua empresa}} — não sobre o escritório. Se não houver observação específica, não envie este e-mail.\n\n## O que eu proponho\n\nEm 15 minutos consigo mostrar [resultado concreto que outro cliente do mesmo porte obteve].\n\n[Ver agenda de 15 minutos](https://connectvaley.com.br)\n\nSe não fizer sentido, responda apenas "não" — não insistirei.'},
+    {_id:'t4',nome:'App oficial — Connect Valley 2026',frente:'Connect Valley',
+     assunto:'{{primeiro_nome|Olá}}, o Connect Valley 2026 agora tem aplicativo',
+     preheader:'Programação, mapa, networking e banco de talentos. Seu ingresso já dá acesso.',
+     corpo:'# {{primeiro_nome|Olá}}, sua experiência começa antes do evento\n\nO Connect Valley 2026 agora tem seu próprio aplicativo. Como você já garantiu seu ingresso, o acesso à plataforma já é seu — não precisa comprar nada nem se cadastrar de novo.\n\n> 16 e 17 de outubro de 2026 · Centro de Convenções de Sobral, Ceará\n\n## Tudo em um só lugar\n\n- **Programação completa** — palestras, oficinas e atividades. Monte sua agenda e não perca o que importa.\n- **Mapa do evento** — encontre os espaços e as atrações sem rodar o centro de convenções inteiro.\n- **Conexão entre participantes** — veja quem mais vai estar lá e comece a rede antes do primeiro café.\n- **Banco de talentos** — amplie sua visibilidade profissional e abra caminho para novas oportunidades.\n- **Gamificação** — desafios e atividades que rendem ao longo dos dois dias.\n\n[Acessar o app Connect Valley](https://connect-valley-app.vercel.app/)\n\n## O despertar: o futuro começa agora\n\nAqui, ideias se conectam. Pessoas se transformam. Negócios acontecem.\n\nEntre no app antes do dia 16, confira a programação e chegue sabendo onde quer estar. Nos vemos em Sobral.\n\nEquipe Connect Valley'}
   ],
   riscos:[
     {_id:'r1',risco:'Prospecção fria contamina a reputação do domínio institucional',prob:'Alta',impacto:'Crítico',mitig:'Subdomínio e conta de envio separados para prospecção; jamais misturar com relacionamento',resp:'',status:'Aberto'},
@@ -1329,7 +1333,16 @@ document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>
   // campos de configuração criados depois que a equipe já salvou dados: herdam o padrão do SEED.
   // Só preenche o que não existe — o que foi digitado continua intacto.
   Object.entries(SEED.config[0]).forEach(([k,v])=>{ if(state.config[0][k]===undefined)state.config[0][k]=v; });
-  App.renderAll(); App.saveNote();
+  // dados de teste que saíram do SEED: quem os tinha salvos recebe o valor real sem redigitar.
+  // A troca exige igualdade exata com o provisório, então edição de verdade nunca é sobrescrita.
+  Object.entries({razao:'Razão Social Teste Ltda (PROVISÓRIO)', cnpj:'00.000.000/0001-00',
+    endereco:'Rua Teste, 100 — Centro, Sobral/CE, CEP 62000-000 (PROVISÓRIO)'})
+    .forEach(([k,provisorio])=>{ if(state.config[0][k]===provisorio)state.config[0][k]=SEED.config[0][k]; });
+  // templates acrescentados ao SEED depois: entram para quem já tem dados salvos.
+  // Compara por _id, então template editado pela equipe não é tocado nem duplicado.
+  state.templates=state.templates||[];
+  SEED.templates.forEach(t=>{ if(!state.templates.some(x=>x._id===t._id))state.templates.push(JSON.parse(JSON.stringify(t))); });
+  App.renderAll(); App.saveNote(); App.save();
   if(SHARED&&storageOk)setInterval(()=>syncFromShared(false),15000);
 })();
 </script>
